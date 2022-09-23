@@ -57,7 +57,7 @@
 //  <o>Total heap size [bytes] <0-0xFFFFFFFF>
 //  <i> Heap memory size in bytes.
 //  <i> Default: 8192
-#define configTOTAL_HEAP_SIZE                   ((size_t)(8192))
+#define configTOTAL_HEAP_SIZE                   ((size_t)(0xD000))
 
 //  <o>Kernel tick frequency [Hz] <0-0xFFFFFFFF>
 //  <i> Kernel tick rate in Hz.
@@ -289,6 +289,6 @@ void vLoggingPrintf( const char * pcFormat, ... );
 /* The application defines the array used for the FreeRTOS */
 #define configAPPLICATION_ALLOCATED_HEAP        1
 #define configHEAP_REGION0_ADDR                 0
-#define configHEAP_REGION0_SIZE                 0xD000
+#define configHEAP_REGION0_SIZE                 configTOTAL_HEAP_SIZE
 
 #endif /* FREERTOS_CONFIG_H */
