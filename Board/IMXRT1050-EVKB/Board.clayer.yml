@@ -3,7 +3,9 @@
 layer:
   # type: Board
   # name: IMXRT1050-EVKB
-  description: Board setup with interfaces
+  # variant: IoT-WiFi-Ethernet
+  description: Board setup for IoT with WiFi and Ethernet interface
+  # for-device: MIMXRT1052DVL6B
 
   # interfaces:
   #   - consumes:
