@@ -1,5 +1,5 @@
 /* -----------------------------------------------------------------------------
- * Copyright (c) 2021 Arm Limited (or its affiliates). All rights reserved.
+ * Copyright (c) 2020 Arm Limited (or its affiliates). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -17,7 +17,39 @@
  * -------------------------------------------------------------------------- */
 
 #include <stdint.h>
+#include <string.h>
+#include <stdio.h>
+
+#include "Driver_WiFi.h"
+
+#define SSID            ""
+#define PASSWORD        ""
+#define SECURITY_TYPE   ARM_WIFI_SECURITY_WPA2
+
+extern ARM_DRIVER_WIFI Driver_WiFi0;
 
 int32_t socket_startup (void) {
+  ARM_WIFI_CONFIG_t config;
+
+  printf("Connecting to WiFi ...\r\n");
+
+  Driver_WiFi0.Initialize  (NULL);
+  Driver_WiFi0.PowerControl(ARM_POWER_FULL);
+  
+  memset((void *)&config, 0, sizeof(config));
+
+  config.ssid     = SSID;
+  config.pass     = PASSWORD;
+  config.security = SECURITY_TYPE;
+  config.ch       = 0U;
+
+  Driver_WiFi0.Activate(0U, &config);
+
+  if (Driver_WiFi0.IsConnected() == 0U) {
+    printf("WiFi network connection failed!\r\n");
+    return (-1);
+  } else {
+    printf("WiFi network connection succeeded!\r\n");
+  }
   return 0;
 }

@@ -22,7 +22,6 @@ project:
     - ./amazon-freertos/libraries/abstractions/platform/freertos/include
     - ./amazon-freertos/libraries/abstractions/secure_sockets/include
     - ./amazon-freertos/libraries/abstractions/transport/secure_sockets
-    - ./amazon-freertos/libraries/abstractions/wifi/include
     - ./amazon-freertos/libraries/c_sdk/standard/common/include
     - ./amazon-freertos/libraries/c_sdk/standard/common/include/private
     - ./amazon-freertos/libraries/freertos_plus/standard/crypto/include
@@ -61,10 +60,10 @@ project:
     - group: config_files
       files:
         - file: ./config_files/aws_demo_config.h
+        - file: ./config_files/aws_iot_network_Config.h
         - file: ./config_files/aws_mbedtls_config.h
         - file: ./config_files/core_mqtt_config.h
         - file: ./config_files/core_pkcs11_config.h
-        - file: ./config_files/FreeRTOSIPConfig.h
         - file: ./config_files/iot_config.h
         - file: ./config_files/iot_secure_sockets_config.h
         - file: ./config_files/mqtt_demo_mutual_auth_config.h
@@ -96,6 +95,7 @@ project:
         - file: ./amazon-freertos/libraries/c_sdk/standard/common/taskpool/iot_taskpool_static_memory.c
         - file: ./amazon-freertos/libraries/abstractions/platform/freertos/iot_threads_freertos.c
         - file: ./amazon-freertos/libraries/abstractions/platform/freertos/iot_clock_freertos.c
+        - file: ./amazon-freertos/libraries/abstractions/secure_sockets/iot_socket/iot_secure_sockets.c
         - file: ./amazon-freertos/libraries/abstractions/transport/secure_sockets/transport_secure_sockets.c
         - file: ./amazon-freertos/libraries/freertos_plus/standard/crypto/src/iot_crypto.c
         - file: ./amazon-freertos/libraries/freertos_plus/standard/tls/src/iot_tls.c
@@ -106,6 +106,16 @@ project:
         - file: ./amazon-freertos/ports/pkcs11/core_pkcs11_pal.c
 
   layers:
+    - layer: ./Socket/FreeRTOS+TCP/Socket.clayer.yml
+      for-type:
+        - +IP-Stack
+    - layer: ./Socket/WiFi/Socket.clayer.yml
+      for-type:
+        - +WiFi
+    - layer: ./Socket/VSocket/Socket.clayer.yml
+      for-type:
+        - +AVH
+
     - layer: ./Board/IMXRT1050-EVKB/Board.clayer.yml
       for-type: 
         - +IP-Stack
@@ -115,18 +125,4 @@ project:
         - +WiFi
     - layer: ./Board/AVH_MPS3_Corstone-300/Board.clayer.yml
       for-type: 
-        - +AVH
-
-    - layer: ./Socket/VSocket/Socket.clayer.yml
-      for-type: 
-        - +AVH
-
-    - layer: ./Interface/AWS/FreeRTOS+TCP/Interface.clayer.yml
-      for-type:
-        - +IP-Stack
-    - layer: ./Interface/AWS/WiFi/Interface.clayer.yml
-      for-type:
-        - +WiFi
-    - layer: ./Interface/AWS/Socket/Interface.clayer.yml
-      for-type:
         - +AVH

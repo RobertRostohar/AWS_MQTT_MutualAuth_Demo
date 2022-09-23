@@ -25,7 +25,6 @@
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
-#include "FreeRTOSIPConfig.h"
 #include "iot_tls.h"
 #include "iot_crypto.h"
 #include "core_pkcs11_config.h"

@@ -1,5 +1,5 @@
 /* -----------------------------------------------------------------------------
- * Copyright (c) 2021 Arm Limited (or its affiliates). All rights reserved.
+ * Copyright (c) 2021-2022 Arm Limited (or its affiliates). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -16,18 +16,10 @@
  * limitations under the License.
  * -------------------------------------------------------------------------- */
 
+#include <string.h>
 #include "iot_secure_sockets.h"
-#include "iot_wifi.h"
 #include "iot_tls.h"
-#include "Driver_WiFi.h"
-
-
-/* Defines number of the underlying driver (Driver_WiFi#) */
-/* Default: 0                                             */
-#ifndef WIFI_DRIVER_NUMBER_CONNECT
-#define WIFI_DRIVER_NUMBER_CONNECT    0
-#endif
-
+#include "iot_socket.h"
 
 /* Defines memory allocation and free functions */
 #ifndef SSOCK_MALLOC
@@ -36,11 +28,6 @@
 #ifndef SSOCK_FREE
 #define SSOCK_FREE                    vPortFree
 #endif
-
-
-/* Reference to the underlying WiFi driver */
-extern ARM_DRIVER_WIFI                  ARM_Driver_WiFi_(WIFI_DRIVER_NUMBER_CONNECT);
-#define Driver_WIFI                   (&ARM_Driver_WiFi_(WIFI_DRIVER_NUMBER_CONNECT))
 
 #define SSOCK_FLAGS_CONNECTED         (1U << 0)
 #define SSOCK_FLAGS_USE_TLS           (1U << 1)
@@ -121,13 +108,13 @@ Socket_t SOCKETS_Socket (int32_t lDomain, int32_t lType, int32_t lProtocol) {
       socket->server_cert_len = 0U;
       
       if (socket != NULL) {
-        af       = ARM_SOCKET_AF_INET;
-        type     = ARM_SOCKET_SOCK_STREAM;
-        protocol = ARM_SOCKET_IPPROTO_TCP;
+        af       = IOT_SOCKET_AF_INET;
+        type     = IOT_SOCKET_SOCK_STREAM;
+        protocol = IOT_SOCKET_IPPROTO_TCP;
 
-        socket->id = Driver_WIFI->SocketCreate (af, type, protocol);
+        socket->id = iotSocketCreate (af, type, protocol);
 
-        if (socket->id < 0) {
+        if ((socket->id <= -1) && (socket->id >= -16)) {
           /* Socket create failed, release resources */
           SSOCK_FREE (socket);
 
@@ -194,18 +181,18 @@ int32_t SOCKETS_Bind (Socket_t xSocket, SocketsSockaddr_t *pxAddress, Socklen_t 
     ip_len = 4U;
     port   = SOCKETS_ntohs (pxAddress->usPort);
 
-    rc = Driver_WIFI->SocketBind (xSocket->id, ip, ip_len, port);
+    rc = iotSocketBind (xSocket->id, ip, ip_len, port);
 
     if (rc == 0) {
       rc = SOCKETS_ERROR_NONE;
-    } else if (rc == ARM_SOCKET_ESOCK) {
+    } else if (rc == IOT_SOCKET_ESOCK) {
       rc = SOCKETS_SOCKET_ERROR;
-    } else if (rc == ARM_SOCKET_EINVAL) {
+    } else if (rc == IOT_SOCKET_EINVAL) {
       rc = SOCKETS_EINVAL;
-    } else if (rc == ARM_SOCKET_EADDRINUSE) {
+    } else if (rc == IOT_SOCKET_EADDRINUSE) {
       rc = SOCKETS_EINVAL;
     } else {
-      if (rc == ARM_SOCKET_ERROR) {
+      if (rc == IOT_SOCKET_ERROR) {
         rc = SOCKETS_SOCKET_ERROR;
       }
     }
@@ -257,25 +244,25 @@ int32_t SOCKETS_Connect (Socket_t xSocket, SocketsSockaddr_t *pxAddress, Socklen
       ip_len = 4U;
       port   = SOCKETS_ntohs (pxAddress->usPort);
 
-      rc = Driver_WIFI->SocketConnect (xSocket->id, ip, ip_len, port);
+      rc = iotSocketConnect (xSocket->id, ip, ip_len, port);
 
       if (rc == 0) {
         /* Socket is connected */
         xSocket->flags |= SSOCK_FLAGS_CONNECTED;
 
         rc = SOCKETS_ERROR_NONE;
-      } else if (rc == ARM_SOCKET_ESOCK) {
+      } else if (rc == IOT_SOCKET_ESOCK) {
         rc = SOCKETS_SOCKET_ERROR;
-      } else if (rc == ARM_SOCKET_EINVAL) {
+      } else if (rc == IOT_SOCKET_EINVAL) {
         rc = SOCKETS_EINVAL;
-      } else if (rc == ARM_SOCKET_EALREADY) {
+      } else if (rc == IOT_SOCKET_EALREADY) {
         rc = SOCKETS_EINVAL;
-      } else if (rc == ARM_SOCKET_EINPROGRESS ) {
+      } else if (rc == IOT_SOCKET_EINPROGRESS ) {
         rc = SOCKETS_SOCKET_ERROR;
-      } else if (rc == ARM_SOCKET_EISCONN) {
+      } else if (rc == IOT_SOCKET_EISCONN) {
         rc = SOCKETS_EISCONN;
       } else {
-        if (rc == ARM_SOCKET_ERROR) {
+        if (rc == IOT_SOCKET_ERROR) {
           rc = SOCKETS_SOCKET_ERROR;
         }
       }
@@ -349,25 +336,25 @@ int32_t SOCKETS_Recv (Socket_t xSocket, void *pvBuffer, size_t xBufferLength, ui
       /* Receive is allowed */
       if ((xSocket->flags & SSOCK_FLAGS_USE_TLS) == 0U) {
         /* Non-secure receive */
-        rc = Driver_WIFI->SocketRecv (xSocket->id, pvBuffer, xBufferLength);
+        rc = iotSocketRecv (xSocket->id, pvBuffer, xBufferLength);
 
         if (rc < 0) {
-          if (rc == ARM_SOCKET_ESOCK) {
+          if (rc == IOT_SOCKET_ESOCK) {
             /* Invalid socket */
             rc = SOCKETS_SOCKET_ERROR;
-          } else if (rc == ARM_SOCKET_EINVAL) {
+          } else if (rc == IOT_SOCKET_EINVAL) {
             /* Invalid argument */
             rc = SOCKETS_EINVAL;
-          } else if (rc == ARM_SOCKET_ENOTCONN) {
+          } else if (rc == IOT_SOCKET_ENOTCONN) {
             /* Socket is not connected */
             rc = SOCKETS_ENOTCONN;
-          } else if (rc == ARM_SOCKET_ECONNRESET) {
+          } else if (rc == IOT_SOCKET_ECONNRESET) {
             /* Connection reset by the peer */
             rc = SOCKETS_ECLOSED;
-          } else if (rc == ARM_SOCKET_ECONNABORTED) {
+          } else if (rc == IOT_SOCKET_ECONNABORTED) {
             /* Connection aborted locally */
             rc = SOCKETS_ECLOSED;
-          } else if (rc == ARM_SOCKET_EAGAIN) {
+          } else if (rc == IOT_SOCKET_EAGAIN) {
             /* Operation would block or timed out */
             rc = SOCKETS_EWOULDBLOCK;
           } else {
@@ -424,25 +411,25 @@ int32_t SOCKETS_Send (Socket_t xSocket, const void *pvBuffer, size_t xDataLength
       /* Write is allowed */
       if ((xSocket->flags & SSOCK_FLAGS_USE_TLS) == 0U) {
         /* Non-secure write */
-        rc = Driver_WIFI->SocketSend (xSocket->id, pvBuffer, xDataLength);
+        rc = iotSocketSend (xSocket->id, pvBuffer, xDataLength);
 
         if (rc < 0) {
-          if (rc == ARM_SOCKET_ESOCK) {
+          if (rc == IOT_SOCKET_ESOCK) {
             /* Invalid socket */
             rc = SOCKETS_SOCKET_ERROR;
-          } else if (rc == ARM_SOCKET_EINVAL) {
+          } else if (rc == IOT_SOCKET_EINVAL) {
             /* Invalid argument */
             rc = SOCKETS_EINVAL;
-          } else if (rc == ARM_SOCKET_ENOTCONN) {
+          } else if (rc == IOT_SOCKET_ENOTCONN) {
             /* Socket is not connected */
             rc = SOCKETS_ENOTCONN;
-          } else if (rc == ARM_SOCKET_ECONNRESET) {
+          } else if (rc == IOT_SOCKET_ECONNRESET) {
             /* Connection reset by the peer */
             rc = SOCKETS_ECLOSED;
-          } else if (rc == ARM_SOCKET_ECONNABORTED) {
+          } else if (rc == IOT_SOCKET_ECONNABORTED) {
             /* Connection aborted locally */
             rc = SOCKETS_ECLOSED;
-          } else if (rc == ARM_SOCKET_EAGAIN) {
+          } else if (rc == IOT_SOCKET_EAGAIN) {
             /* Operation would block or timed out */
             rc = SOCKETS_EWOULDBLOCK;
           } else {
@@ -550,13 +537,13 @@ int32_t SOCKETS_Close(Socket_t xSocket) {
     rc = SOCKETS_ERROR_NONE;
   }
   else {
-    rc = Driver_WIFI->SocketClose (xSocket->id);
+    rc = iotSocketClose (xSocket->id);
 
     if (rc == 0) {
       /* Socket is closed */
-    } else if (rc == ARM_SOCKET_ESOCK) {
+    } else if (rc == IOT_SOCKET_ESOCK) {
       rc = SOCKETS_SOCKET_ERROR;
-    } else if (rc == ARM_SOCKET_EAGAIN) {
+    } else if (rc == IOT_SOCKET_EAGAIN) {
       rc = SOCKETS_SOCKET_ERROR;
     } else {
       rc = SOCKETS_SOCKET_ERROR;
@@ -684,54 +671,54 @@ int32_t SOCKETS_SetSockOpt (Socket_t xSocket, int32_t lLevel, int32_t lOptionNam
   else {
     switch (lOptionName) {
       case SOCKETS_SO_RCVTIMEO:
-        rc = Driver_WIFI->SocketSetOpt (xSocket->id, ARM_SOCKET_SO_RCVTIMEO, pvOptionValue, xOptionLength);
+        rc = iotSocketSetOpt (xSocket->id, IOT_SOCKET_SO_RCVTIMEO, pvOptionValue, xOptionLength);
 
         if (rc == 0) {
           rc = SOCKETS_ERROR_NONE;
-        } else if (rc == ARM_SOCKET_ESOCK) {
+        } else if (rc == IOT_SOCKET_ESOCK) {
           rc = SOCKETS_SOCKET_ERROR;
-        } else if (rc == ARM_SOCKET_EINVAL) {
+        } else if (rc == IOT_SOCKET_EINVAL) {
           rc = SOCKETS_EINVAL;
-        } else if (rc == ARM_SOCKET_ENOTSUP) {
+        } else if (rc == IOT_SOCKET_ENOTSUP) {
           rc = SOCKETS_SOCKET_ERROR;
         } else {
-          if (rc == ARM_SOCKET_ERROR) {
+          if (rc == IOT_SOCKET_ERROR) {
             rc = SOCKETS_SOCKET_ERROR;
           }
         }
         break;
 
       case SOCKETS_SO_SNDTIMEO:
-        rc = Driver_WIFI->SocketSetOpt (xSocket->id, ARM_SOCKET_SO_SNDTIMEO, pvOptionValue, xOptionLength);
+        rc = iotSocketSetOpt (xSocket->id, IOT_SOCKET_SO_SNDTIMEO, pvOptionValue, xOptionLength);
 
         if (rc == 0) {
           rc = SOCKETS_ERROR_NONE;
-        } else if (rc == ARM_SOCKET_ESOCK) {
+        } else if (rc == IOT_SOCKET_ESOCK) {
           rc = SOCKETS_SOCKET_ERROR;
-        } else if (rc == ARM_SOCKET_EINVAL) {
+        } else if (rc == IOT_SOCKET_EINVAL) {
           rc = SOCKETS_EINVAL;
-        } else if (rc == ARM_SOCKET_ENOTSUP) {
+        } else if (rc == IOT_SOCKET_ENOTSUP) {
           rc = SOCKETS_SOCKET_ERROR;
         } else {
-          if (rc == ARM_SOCKET_ERROR) {
+          if (rc == IOT_SOCKET_ERROR) {
             rc = SOCKETS_SOCKET_ERROR;
           }
         }
         break;
 
       case SOCKETS_SO_NONBLOCK:
-        rc = Driver_WIFI->SocketSetOpt (xSocket->id, ARM_SOCKET_IO_FIONBIO, pvOptionValue, xOptionLength);
+        rc = iotSocketSetOpt (xSocket->id, IOT_SOCKET_IO_FIONBIO, pvOptionValue, xOptionLength);
 
         if (rc == 0) {
           rc = SOCKETS_ERROR_NONE;
-        } else if (rc == ARM_SOCKET_ESOCK) {
+        } else if (rc == IOT_SOCKET_ESOCK) {
           rc = SOCKETS_SOCKET_ERROR;
-        } else if (rc == ARM_SOCKET_EINVAL) {
+        } else if (rc == IOT_SOCKET_EINVAL) {
           rc = SOCKETS_EINVAL;
-        } else if (rc == ARM_SOCKET_ENOTSUP) {
+        } else if (rc == IOT_SOCKET_ENOTSUP) {
           rc = SOCKETS_SOCKET_ERROR;
         } else {
-          if (rc == ARM_SOCKET_ERROR) {
+          if (rc == IOT_SOCKET_ERROR) {
             rc = SOCKETS_SOCKET_ERROR;
           }
         }
@@ -832,7 +819,7 @@ uint32_t SOCKETS_GetHostByName (const char *pcHostName) {
 
   ip_len = sizeof(ip);
 
-  rval = Driver_WIFI->SocketGetHostByName (pcHostName, ARM_SOCKET_AF_INET, (uint8_t *)&ip, &ip_len);
+  rval = iotSocketGetHostByName (pcHostName, IOT_SOCKET_AF_INET, (uint8_t *)&ip, &ip_len);
 
   if (rval != 0) {
     ip = 0U;
@@ -857,25 +844,25 @@ static BaseType_t Recv_Cb (void *pvCallerContext, unsigned char * pucReceiveBuff
 
   xSocket = (Socket_t)pvCallerContext;
 
-  rc = Driver_WIFI->SocketRecv (xSocket->id, pucReceiveBuffer, xReceiveLength);
+  rc = iotSocketRecv (xSocket->id, pucReceiveBuffer, xReceiveLength);
 
   if (rc < 0) {
-    if (rc == ARM_SOCKET_ESOCK) {
+    if (rc == IOT_SOCKET_ESOCK) {
       /* Invalid socket */
       rc = SOCKETS_SOCKET_ERROR;
-    } else if (rc == ARM_SOCKET_EINVAL) {
+    } else if (rc == IOT_SOCKET_EINVAL) {
       /* Invalid argument */
       rc = SOCKETS_EINVAL;
-    } else if (rc == ARM_SOCKET_ENOTCONN) {
+    } else if (rc == IOT_SOCKET_ENOTCONN) {
       /* Socket is not connected */
       rc = SOCKETS_ENOTCONN;
-    } else if (rc == ARM_SOCKET_ECONNRESET) {
+    } else if (rc == IOT_SOCKET_ECONNRESET) {
       /* Connection reset by the peer */
       rc = SOCKETS_ECLOSED;
-    } else if (rc == ARM_SOCKET_ECONNABORTED) {
+    } else if (rc == IOT_SOCKET_ECONNABORTED) {
       /* Connection aborted locally */
       rc = SOCKETS_ECLOSED;
-    } else if (rc == ARM_SOCKET_EAGAIN) {
+    } else if (rc == IOT_SOCKET_EAGAIN) {
       /* Operation would block or timed out */
       rc = SOCKETS_EWOULDBLOCK;
     } else {
@@ -906,25 +893,25 @@ static BaseType_t Send_Cb (void *pvCallerContext, const unsigned char *pucData, 
 
   xSocket = (Socket_t)pvCallerContext;
 
-  rc = Driver_WIFI->SocketSend (xSocket->id, pucData, xDataLength);
+  rc = iotSocketSend (xSocket->id, pucData, xDataLength);
 
   if (rc < 0) {
-    if (rc == ARM_SOCKET_ESOCK) {
+    if (rc == IOT_SOCKET_ESOCK) {
       /* Invalid socket */
       rc = SOCKETS_SOCKET_ERROR;
-    } else if (rc == ARM_SOCKET_EINVAL) {
+    } else if (rc == IOT_SOCKET_EINVAL) {
       /* Invalid argument */
       rc = SOCKETS_EINVAL;
-    } else if (rc == ARM_SOCKET_ENOTCONN) {
+    } else if (rc == IOT_SOCKET_ENOTCONN) {
       /* Socket is not connected */
       rc = SOCKETS_ENOTCONN;
-    } else if (rc == ARM_SOCKET_ECONNRESET) {
+    } else if (rc == IOT_SOCKET_ECONNRESET) {
       /* Connection reset by the peer */
       rc = SOCKETS_ECLOSED;
-    } else if (rc == ARM_SOCKET_ECONNABORTED) {
+    } else if (rc == IOT_SOCKET_ECONNABORTED) {
       /* Connection aborted locally */
       rc = SOCKETS_ECLOSED;
-    } else if (rc == ARM_SOCKET_EAGAIN) {
+    } else if (rc == IOT_SOCKET_EAGAIN) {
       /* Operation would block or timed out */
       rc = SOCKETS_EWOULDBLOCK;
     } else {

@@ -45,7 +45,7 @@ static const uint8_t EthMAC[6] = {
 };
 
 extern const char *pcApplicationHostnameHook (void) {
-  return "IMXRT1050-EVKB";
+  return "FreeRTOS+TCP_Net";
 }
 
 uint8_t NetUp;
@@ -59,7 +59,7 @@ void vApplicationIPNetworkEventHook (eIPCallbackEvent_t eNetworkEvent) {
   }
 }
 
-int32_t network_startup (void) {
+int32_t socket_startup (void) {
   int32_t rval;
   uint32_t tout;
 
