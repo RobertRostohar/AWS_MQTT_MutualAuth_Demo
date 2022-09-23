@@ -3,13 +3,17 @@
 layer:
   # type: Board
   # name: AVH_MPS3_Cortsone-300
-  description: Board setup with interfaces
+  # variant: IoT-VSocket-Ethernet
+  description: Board setup for IoT with VSocket and Ethernet interface
+  # for device: ARM::SSE-300-MPS3
 
   # interfaces:
   #   - consumes:
   #     - RTOS2:
   #   - provides:
+  #     - VSocket
   #     - C_ETH: 0
+  #     - C_VIO:
   #     - STDOUT:
   #     - STDIN:
   #     - STDERR:
@@ -26,6 +30,10 @@ layer:
 
   add-paths:
     - .
+
+  defines:
+    - CMSIS_VIN
+    - CMSIS_VOUT
 
   misc:
     - Link:

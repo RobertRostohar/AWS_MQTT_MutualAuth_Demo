@@ -3,24 +3,28 @@ Board: ARM AVH_MPS3_Corstone-300
 
 MPS3 platform for Corstone-300 simulated by Arm Virtual Hardware Targets (VHT).
 
+The following models are available:
+ - VHT_MPS3_Corstone_SSE-300: Corstone-300 for MPS3
+ - VHT_Corstone_SSE-300_Ethos-U55: Corstone-300 with Ethos-U55 for MPS3
+ - VHT_Corstone_SSE-300_Ethos-U65: Corstone-300 with Ethos-U55 for MPS3
+
 Running the VHT in uVision requires the following settings:
  - open "Options for Target"
  - select "Debug" tab
  - under "Use" select "Models ARMv8-M Debugger" and click "Settings" end enter the following:
-   - Command: $KARM\VHT\VHT_MPS3_Corstone_SSE-300.exe
-   - Target: cpu0
-   - Configuration File: fvp_config.txt
+   - Command: `$KARM\VHT\VHT_MPS3_Corstone_SSE-300.exe`
+   - Target: `cpu0`
+   - Configuration File: `Board\AVH_MPS3_Corstone-300\fvp_config.txt`
 
 Running the VHT via command line (from project root directory and VHT executable in path):
-`VHT_MPS3_Corstone_SSE-300 -f fvp_config.txt -C mps3_board.visualisation.disable-visualisation=1 -C mps3_board.telnetterminal0.start_telnet=0 -C mps3_board.uart0.out_file=- -a <image>`
+`VHT_MPS3_Corstone_SSE-300 -f Board/AVH_MPS3_Corstone-300/fvp_config.txt -a <image>`
 
-The heap/stack setup and the CMSIS-Driver assignment is in configuration files of related software components.
 
 ### System Configuration
 
 | System Component        | Setting
 |:------------------------|:----------------------------------------
-| Device                  | SSE-3000-MPS3
+| Device                  | SSE-300-MPS3
 | Clock                   | 32 MHz
 | Heap                    | 64 kB (configured in region_limit.h file)
 | Stack (MSP)             | 1 kB (configured in region_limit.h file)

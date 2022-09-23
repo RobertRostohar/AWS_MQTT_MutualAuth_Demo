@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------
- * Copyright (c) 2021 Arm Limited (or its affiliates). All rights reserved.
+ * Copyright (c) 2022 Arm Limited (or its affiliates). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -16,20 +16,39 @@
  * limitations under the License.
  *
  *      Name:    retarget_stdio.c
- *      Purpose: Retarget stdio to USART
+ *      Purpose: Retarget stdio to UART
  *
  *---------------------------------------------------------------------------*/
 
-#include "Driver_USART.h"
+#include "RTE_Components.h"
+#include CMSIS_device_header
 
-#define USART_DRV_NUM           0
-#define USART_BAUDRATE          115200
+#include "device_definition.h"
+#include "uart_cmsdk_drv.h"
+#include "cmsis_os2.h" 
 
-#define _USART_Driver_(n)  Driver_USART##n
-#define  USART_Driver_(n) _USART_Driver_(n)
- 
-extern ARM_DRIVER_USART  USART_Driver_(USART_DRV_NUM);
-#define ptrUSART       (&USART_Driver_(USART_DRV_NUM))
+#define UART_DEV                UART0_CMSDK_DEV
+#define UART_BAUDRATE           115200
+#define UART_BUF_SIZE           2048    /* must be 2^n */
+
+static uint8_t rx_buf[UART_BUF_SIZE];
+volatile static uint32_t rx_idx_i;
+volatile static uint32_t rx_idx_o;
+
+#define UART_RX_EVENT 1U
+static osEventFlagsId_t event_id = NULL;
+
+/* UART RX IRQ handler */
+void UARTRX0_Handler (void);
+void UARTRX0_Handler (void) {
+  uint32_t idx = rx_idx_i & (UART_BUF_SIZE - 1);
+
+  if (uart_cmsdk_read(&UART_DEV, &rx_buf[idx]) == UART_CMSDK_ERR_NONE) {
+    rx_idx_i++;
+    osEventFlagsSet(event_id, UART_RX_EVENT);
+  }
+  uart_cmsdk_clear_interrupt(&UART_DEV, UART_CMSDK_IRQ_RX);
+}
 
 /**
   Initialize stdio
@@ -37,25 +56,21 @@ extern ARM_DRIVER_USART  USART_Driver_(USART_DRV_NUM);
   \return          0 on success, or -1 on error.
 */
 int stdio_init (void) {
-  int32_t status;
- 
-  status = ptrUSART->Initialize(NULL);
-  if (status != ARM_DRIVER_OK) return (-1);
- 
-  status = ptrUSART->PowerControl(ARM_POWER_FULL);
-  if (status != ARM_DRIVER_OK) return (-1);
- 
-  status = ptrUSART->Control(ARM_USART_MODE_ASYNCHRONOUS |
-                             ARM_USART_DATA_BITS_8       |
-                             ARM_USART_PARITY_NONE       |
-                             ARM_USART_STOP_BITS_1       |
-                             ARM_USART_FLOW_CONTROL_NONE,
-                             USART_BAUDRATE);
-  if (status != ARM_DRIVER_OK) return (-1);
- 
-  status = ptrUSART->Control(ARM_USART_CONTROL_RX, 1);
-  if (status != ARM_DRIVER_OK) return (-1);
- 
+
+  rx_idx_i = 0U;
+  rx_idx_o = 0U;
+
+  if (uart_cmsdk_init(&UART_DEV, PeripheralClock) != UART_CMSDK_ERR_NONE) {
+    return (-1);
+  }
+  if (uart_cmsdk_set_baudrate(&UART_DEV, UART_BAUDRATE) != UART_CMSDK_ERR_NONE) {
+    return (-1);
+  }
+  if (uart_cmsdk_irq_rx_enable(&UART_DEV) != UART_CMSDK_ERR_NONE) {
+    return (-1);
+  }
+  NVIC_EnableIRQ(UARTRX0_IRQn);
+
   return (0);
 }
 
@@ -66,13 +81,10 @@ int stdio_init (void) {
   \return          The character written, or -1 on write error.
 */
 int stderr_putchar (int ch) {
-  uint8_t buf[1];
- 
-  buf[0] = ch;
-  if (ptrUSART->Send(buf, 1) != ARM_DRIVER_OK) {
-    return (-1);
-  }
-  while (ptrUSART->GetTxCount() != 1);
+
+  while (!uart_cmsdk_tx_ready(&UART_DEV));
+  uart_cmsdk_write(&UART_DEV, (uint8_t)ch);
+
   return (ch);
 }
 
@@ -83,13 +95,10 @@ int stderr_putchar (int ch) {
   \return          The character written, or -1 on write error.
 */
 int stdout_putchar (int ch) {
-  uint8_t buf[1];
- 
-  buf[0] = ch;
-  if (ptrUSART->Send(buf, 1) != ARM_DRIVER_OK) {
-    return (-1);
-  }
-  while (ptrUSART->GetTxCount() != 1);
+
+  while (!uart_cmsdk_tx_ready(&UART_DEV));
+  uart_cmsdk_write(&UART_DEV, (uint8_t)ch);
+
   return (ch);
 }
 
@@ -99,11 +108,23 @@ int stdout_putchar (int ch) {
   \return     The next character from the input, or -1 on read error.
 */
 int stdin_getchar (void) {
-  uint8_t buf[1];
- 
-  if (ptrUSART->Receive(buf, 1) != ARM_DRIVER_OK) {
-    return (-1);
+  uint32_t cnt, idx;
+  int ch;
+
+  if (event_id == NULL) {
+    event_id = osEventFlagsNew(NULL);
   }
-  while (ptrUSART->GetRxCount() != 1);
-  return (buf[0]);
+
+  do {
+    cnt = rx_idx_i - rx_idx_o;
+    if (cnt > 0U) {
+      idx = rx_idx_o & (UART_BUF_SIZE - 1U);
+      ch = rx_buf[rx_idx_o++];
+    }
+    else {
+      osEventFlagsWait(event_id, UART_RX_EVENT, osFlagsWaitAny, osWaitForever);
+    }
+  } while (cnt == 0U);
+
+  return ch;
 }
