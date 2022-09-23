@@ -3,7 +3,9 @@
 layer:
   # type: Board
   # name: B-U585I-IOT02A
-  description: Board setup with interfaces
+  # variant: IoT-WiFi
+  description: Board setup for IoT with WiFi interface
+  # for-board: B-U585I-IOT02A
 
   # interfaces:
   #   - consumes:

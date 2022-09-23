@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------
- * Copyright (c) 2021 Arm Limited (or its affiliates). All rights reserved.
+ * Copyright (c) 2021-2022 Arm Limited (or its affiliates). All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -21,14 +21,56 @@
  *---------------------------------------------------------------------------*/
 
 #include "stm32u5xx_hal.h"
+#include "cmsis_os2.h"                  // ::CMSIS:RTOS2
+
 
 #define HUARTx            huart1
+#define UART_BUFFER_SIZE  2048U         // must be 2^n
+#define UART_RX_EVENT     1U
 
 extern UART_HandleTypeDef HUARTx;
 
 extern int stderr_putchar (int ch);
 extern int stdout_putchar (int ch);
 extern int stdin_getchar  (void);
+
+// Local Variables
+         static uint8_t  uart_rx_initialized = 0U;
+         static uint8_t  uart_rx_buf[UART_BUFFER_SIZE];
+volatile static uint32_t uart_rx_idx_i;
+volatile static uint32_t uart_rx_idx_o;
+
+static osEventFlagsId_t  uart_rx_evt_id;
+
+
+/**
+  Uart receive callback
+*/
+static void uart_rx_callback (UART_HandleTypeDef * huart, uint16_t num) {
+  uint32_t idx, cnt;
+
+  // UART data received, restart new reception
+  uart_rx_idx_i += num;
+  idx = uart_rx_idx_i & (UART_BUFFER_SIZE - 1U);
+  cnt = UART_BUFFER_SIZE - idx;
+  HAL_UARTEx_ReceiveToIdle_IT(&HUARTx, &uart_rx_buf[idx], cnt);
+
+  osEventFlagsSet(uart_rx_evt_id, UART_RX_EVENT);
+}
+
+/**
+  Uart receive initialize
+*/
+static void uart_rx_init (void) {
+
+  uart_rx_idx_i = 0U;
+  uart_rx_idx_o = 0U;
+
+  uart_rx_evt_id = osEventFlagsNew(NULL);
+
+  HAL_UART_RegisterRxEventCallback(&HUARTx, uart_rx_callback);
+  HAL_UARTEx_ReceiveToIdle_IT(&HUARTx, uart_rx_buf, UART_BUFFER_SIZE);
+}
 
 /**
   Put a character to the stderr
@@ -66,16 +108,24 @@ int stdout_putchar (int ch) {
   \return     The next character from the input, or -1 on read error.
 */
 int stdin_getchar (void) {
-  int ch;
-  HAL_StatusTypeDef hal_stat;
+  int ch = -1;
+  uint32_t idx, cnt;
+
+  if (uart_rx_initialized == 0U) {
+    uart_rx_init();
+    uart_rx_initialized = 1U;
+  }
 
   do {
-    hal_stat = HAL_UART_Receive(&HUARTx, (uint8_t *)&ch, 1U, 60000U);
-  } while (hal_stat == HAL_TIMEOUT);
-
-  if (hal_stat != HAL_OK) {
-    return -1;
-  }
+    cnt = uart_rx_idx_i - uart_rx_idx_o;
+    if (cnt > 0U) {
+      idx = uart_rx_idx_o & (UART_BUFFER_SIZE - 1U);
+      ch = uart_rx_buf[uart_rx_idx_o++];
+    }
+    else {
+      osEventFlagsWait(uart_rx_evt_id, UART_RX_EVENT, osFlagsWaitAny, osWaitForever);
+    }
+  } while (cnt == 0U);
 
   return ch;
 }
