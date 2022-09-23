@@ -1,0 +1,112 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Open-CMSIS-Pack/devtools/schemas/projmgr/0.9.4/tools/projmgr/schemas/clayer.schema.json
+
+layer:
+  # type: Board
+  # name: IMXRT1050-EVKB
+  description: Board setup with interfaces
+
+  # interfaces:
+  #   - consumes:
+  #     - RTOS2:
+  #     - A_UART: *     # Arduino module
+  #   - provides:
+  #     - C_WiFi: 0     # Arduino module
+  #     - C_ETH: 0
+  #     - C_MCI: 0
+  #     - A_UART: 3
+  #     - C_VIO:
+  #     - STDOUT:
+  #     - STDIN:
+  #     - STDERR:
+  #     - Heap : 65536
+
+  # packs:
+  #   - pack: ARM::CMSIS
+  #   - pack: ARM::CMSIS-Driver
+  #   - pack: Keil::ARM_Compiler
+  #   - pack: NXP::MIMXRT1052_DFP@13.1.0
+  #   - pack: NXP::EVKB-IMXRT1050_BSP@13.1.0
+  #   - pack: Keil::IMXRT1050-EVKB_BSP@1.0.0
+  #   - pack: Keil::iMXRT105x_MWP@1.4.0
+
+  add-paths:
+    - .
+
+  defines:
+    - SDK_DEBUGCONSOLE=1
+    # - __MCUXPRESSO
+    - ETH_PHY_REF_CLK_50M=1
+    - SDK_I2C_BASED_COMPONENT_USED
+    - SKIP_SYSCLK_INIT
+    - XIP_BOOT_HEADER_DCD_ENABLE=1
+    - XIP_BOOT_HEADER_ENABLE=1
+    - XIP_EXTERNAL_FLASH=1
+
+  misc:
+    - Link:
+      - '--predefine="-DXIP_BOOT_HEADER_ENABLE=1"'
+      - '--diag_suppress 6314,6329'
+
+  components:
+    - component: Device:Startup
+
+    - component: NXP::Device:CMSIS:MIMXRT1052_header
+    - component: NXP::Device:CMSIS:MIMXRT1052_system
+
+    - component: NXP::Device:SDK Drivers:clock
+    - component: NXP::Device:SDK Drivers:common
+    - component: NXP::Device:SDK Drivers:dmamux
+    - component: NXP::Device:SDK Drivers:edma
+    - component: NXP::Device:SDK Drivers:enet
+    - component: NXP::Device:SDK Drivers:fxos8700cq
+    - component: NXP::Device:SDK Drivers:gpio
+    - component: NXP::Device:SDK Drivers:i2c
+    - component: NXP::Device:SDK Drivers:iomuxc
+    - component: NXP::Device:SDK Drivers:lists
+    - component: NXP::Device:SDK Drivers:lpuart
+    - component: NXP::Device:SDK Drivers:lpuart_adapter
+    - component: NXP::Device:SDK Drivers:lpuart_edma
+    - component: NXP::Device:SDK Drivers:nic301
+    - component: NXP::Device:SDK Drivers:sdhc
+    - component: NXP::Device:SDK Drivers:xip_device
+
+    - component: NXP::Device:SDK Project Template:RTE_Device
+
+    - component: NXP::Device:SDK Utilities:debug_console
+      # defines:
+      #   - SDK_DEBUGCONSOLE=1
+      #   - __MCUXPRESSO
+    - component: NXP::Device:SDK Utilities:serial_manager
+    - component: NXP::Device:SDK Utilities:serial_manager_uart
+
+    - component: NXP::Board Support:SDK Drivers:evkbimxrt1050
+    - component: NXP::Board Support:SDK Project Template:project_template&evkbimxrt1050
+
+    - component: ARM::CMSIS:CORE
+
+    - component: Keil::CMSIS Driver:Ethernet MAC
+    - component: Keil::CMSIS Driver:Ethernet PHY:KSZ8081RNA
+      # defines:
+      #   - ETH_PHY_REF_CLK_50M=1
+    - component: Keil::CMSIS Driver:MCI
+    - component: ARM::CMSIS Driver:USART:Custom
+    - component: NXP::CMSIS Driver:USART:lpuart_cmsis
+    - component: Keil::CMSIS Driver:VIO:Board&IMXRT1050-EVKB
+
+    - component: Keil::Compiler&ARM Compiler:Event Recorder&DAP
+    - component: Keil::Compiler&ARM Compiler:I/O:STDERR&User
+    - component: Keil::Compiler&ARM Compiler:I/O:STDOUT&User
+    - component: Keil::Compiler&ARM Compiler:I/O:STDIN&User
+
+    # - component: Keil::CMSIS Driver:WiFi:ESP8266&UART
+    # - component: Keil::CMSIS Driver:WiFi:WizFi360&UART
+
+  groups:
+    - group: Board
+      files:
+        - file: ./main.c
+        - file: ./retarget_stdio.c
+        - file: ../../RTE/Device/MIMXRT1052DVL6B/MIMXRT1052xxxxx.scf
+    - group: MCUXpresso
+      files:
+        - file: ./IMXRT1050-EVKB.mex

@@ -1,0 +1,132 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Open-CMSIS-Pack/devtools/schemas/projmgr/0.9.4/tools/projmgr/schemas/cproject.schema.json
+
+project:
+  # packs:
+  #   - pack: ARM::CMSIS
+  #   - pack: ARM::CMSIS-FreeRTOS@10.4.6
+  #   - pack: ARM::mbedTLS@1.7.0
+  #   - pack: AWS::backoffAlgorithm@1.0.0-Beta
+  #   - pack: AWS::coreMQTT@1.1.0-Beta
+  #   - pack: AWS::coreMQTT_Agent@1.0.1-Beta
+  #   - pack: AWS::corePKCS11@3.0.0-Beta
+  #   - pack: Arm-Packs::PKCS11
+
+  add-paths:
+    - ./config_files
+    - ./amazon-freertos/demos/include
+    - ./amazon-freertos/demos/network_manager
+    - ./amazon-freertos/demos/common/pkcs11_helpers
+    - ./amazon-freertos/libraries/3rdparty/mbedtls_config
+    - ./amazon-freertos/libraries/logging/include
+    - ./amazon-freertos/libraries/abstractions/platform/include
+    - ./amazon-freertos/libraries/abstractions/platform/freertos/include
+    - ./amazon-freertos/libraries/abstractions/secure_sockets/include
+    - ./amazon-freertos/libraries/abstractions/transport/secure_sockets
+    - ./amazon-freertos/libraries/abstractions/wifi/include
+    - ./amazon-freertos/libraries/c_sdk/standard/common/include
+    - ./amazon-freertos/libraries/c_sdk/standard/common/include/private
+    - ./amazon-freertos/libraries/freertos_plus/standard/crypto/include
+    - ./amazon-freertos/libraries/freertos_plus/standard/tls/include
+
+  components:
+    - component: ARM::CMSIS:RTOS2:FreeRTOS&Cortex-M
+
+    - component: ARM::RTOS&FreeRTOS:Config&CMSIS RTOS2
+    - component: ARM::RTOS&FreeRTOS:Core&Cortex-M
+    - component: ARM::RTOS&FreeRTOS:Event Groups
+    - component: ARM::RTOS&FreeRTOS:Heap&Heap_5
+    - component: ARM::RTOS&FreeRTOS:Stream Buffer
+    - component: ARM::RTOS&FreeRTOS:Timers
+
+    - component: ARM::Security:mbed TLS
+      defines:
+        - MBEDTLS_CONFIG_FILE="aws_mbedtls_config.h"
+
+    - component: AWS::FreeRTOS:backoffAlgorithm
+    - component: AWS::FreeRTOS:coreMQTT
+    - component: AWS::FreeRTOS:coreMQTT Agent
+    - component: AWS::FreeRTOS:corePKCS11&Custom
+      defines:
+        - MBEDTLS_CONFIG_FILE="aws_mbedtls_config.h"
+
+    - component: AWS::Security:PKCS11&No Implementation
+
+  groups:
+    - group: Documentation
+      files: 
+        - file: ./README.md
+    - group: main
+      files:
+        - file: ./app_main.c
+    - group: config_files
+      files:
+        - file: ./config_files/aws_demo_config.h
+        - file: ./config_files/aws_mbedtls_config.h
+        - file: ./config_files/core_mqtt_config.h
+        - file: ./config_files/core_pkcs11_config.h
+        - file: ./config_files/FreeRTOSIPConfig.h
+        - file: ./config_files/iot_config.h
+        - file: ./config_files/iot_secure_sockets_config.h
+        - file: ./config_files/mqtt_demo_mutual_auth_config.h
+    - group: demos_include
+      files:
+        - file: ./amazon-freertos/demos/include/aws_clientcredential.h
+        - file: ./amazon-freertos/demos/include/aws_clientcredential_keys.h
+        - file: ./amazon-freertos/demos/include/aws_demo.h
+        - file: ./amazon-freertos/demos/include/aws_iot_metrics.h
+        - file: ./amazon-freertos/demos/include/iot_config_common.h
+        - file: ./amazon-freertos/demos/include/iot_demo_logging.h
+        - file: ./amazon-freertos/demos/include/iot_demo_runner.h
+    - group: demos
+      files:
+        - file: ./amazon-freertos/demos/demo_runner/aws_demo.c
+        - file: ./amazon-freertos/demos/demo_runner/iot_demo_runner.c
+        - file: ./amazon-freertos/demos/demo_runner/iot_demo_freertos.c
+        - file: ./amazon-freertos/demos/coreMQTT/mqtt_demo_mutual_auth.c
+        - file: ./amazon-freertos/demos/network_manager/aws_iot_network_manager.c
+        - file: ./amazon-freertos/demos/common/pkcs11_helpers/pkcs11_helpers.c
+    - group: libraries
+      defines:
+        - MBEDTLS_CONFIG_FILE="aws_mbedtls_config.h"
+      files:
+        - file: ./amazon-freertos/libraries/c_sdk/standard/common/iot_device_metrics.c
+        - file: ./amazon-freertos/libraries/c_sdk/standard/common/iot_init.c
+        - file: ./amazon-freertos/libraries/c_sdk/standard/common/iot_static_memory_common.c
+        - file: ./amazon-freertos/libraries/c_sdk/standard/common/taskpool/iot_taskpool.c
+        - file: ./amazon-freertos/libraries/c_sdk/standard/common/taskpool/iot_taskpool_static_memory.c
+        - file: ./amazon-freertos/libraries/abstractions/platform/freertos/iot_threads_freertos.c
+        - file: ./amazon-freertos/libraries/abstractions/platform/freertos/iot_clock_freertos.c
+        - file: ./amazon-freertos/libraries/abstractions/transport/secure_sockets/transport_secure_sockets.c
+        - file: ./amazon-freertos/libraries/freertos_plus/standard/crypto/src/iot_crypto.c
+        - file: ./amazon-freertos/libraries/freertos_plus/standard/tls/src/iot_tls.c
+        - file: ./amazon-freertos/libraries/logging/iot_logging.c
+        - file: ./amazon-freertos/libraries/logging/iot_logging_task_dynamic_buffers.c
+    - group: ports
+      files:
+        - file: ./amazon-freertos/ports/pkcs11/core_pkcs11_pal.c
+
+  layers:
+    - layer: ./Board/IMXRT1050-EVKB/Board.clayer.yml
+      for-type: 
+        - +IP-Stack
+        # - +WiFi
+    - layer: ./Board/B-U585I-IOT02A/Board.clayer.yml
+      for-type: 
+        - +WiFi
+    - layer: ./Board/AVH_MPS3_Corstone-300/Board.clayer.yml
+      for-type: 
+        - +AVH
+
+    - layer: ./Socket/VSocket/Socket.clayer.yml
+      for-type: 
+        - +AVH
+
+    - layer: ./Interface/AWS/FreeRTOS+TCP/Interface.clayer.yml
+      for-type:
+        - +IP-Stack
+    - layer: ./Interface/AWS/WiFi/Interface.clayer.yml
+      for-type:
+        - +WiFi
+    - layer: ./Interface/AWS/Socket/Interface.clayer.yml
+      for-type:
+        - +AVH

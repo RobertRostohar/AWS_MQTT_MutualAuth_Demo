@@ -1,0 +1,38 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Open-CMSIS-Pack/devtools/schemas/projmgr/0.9.4/tools/projmgr/schemas/csolution.schema.json
+
+solution:
+  packs:
+    - pack: ARM::CMSIS
+    - pack: ARM::CMSIS-Driver
+    - pack: ARM::CMSIS-FreeRTOS@10.4.6
+    - pack: ARM::mbedTLS@1.7.0
+    - pack: AWS::backoffAlgorithm@1.0.0-Beta
+    - pack: AWS::coreMQTT@1.1.0-Beta
+    - pack: AWS::coreMQTT_Agent@1.0.1-Beta
+    - pack: AWS::corePKCS11@3.0.0-Beta
+    - pack: AWS::FreeRTOS-Plus-TCP@2.3.2-Beta
+    - pack: Arm-Packs::PKCS11
+    - pack: Keil::ARM_Compiler
+    - pack: MDK-Packs::IoT_Socket
+
+    - pack: ARM::V2M_MPS3_SSE_300_BSP@1.2.0
+
+    - pack: NXP::MIMXRT1052_DFP@13.1.0
+    - pack: NXP::EVKB-IMXRT1050_BSP@13.1.0
+    - pack: Keil::IMXRT1050-EVKB_BSP@1.0.0
+    - pack: Keil::iMXRT105x_MWP@1.4.0
+
+    - pack: Keil::STM32U5xx_DFP@2.0.0
+    - pack: Keil::B-U585I-IOT02A_BSP@1.0.0
+
+  target-types:
+    - type: IP-Stack
+      device: MIMXRT1052DVL6B
+    - type: WiFi
+      board: B-U585I-IOT02A
+      device: STM32U585AIIx
+    - type: AVH
+      device: ARM::SSE-300-MPS3
+
+  projects:
+    - project: ./Demo.cproject.yml
