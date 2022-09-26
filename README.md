@@ -12,7 +12,7 @@ successfully run the demo application.
 Targets:
 --------
   - NXP [IMXRT1050-EVKB](./Board/IMXRT1050-EVKB/README.md) Board (`target-type: IP-Stack`, using FreeRTOS+TCP over Ethernet)
-  - STMicroelectronics [B-U585I-IOT02A Board](./Board/B-U585I-IOT02A/README.md) (`target-type: WiFi`, using on-board WiFi module)
+  - STMicroelectronics [B-U585I-IOT02A](./Board/B-U585I-IOT02A/README.md) Board (`target-type: WiFi`, using on-board WiFi module)
   - [Arm Virtual Hardware for Corstone-300](./Board/AVH_MPS3_Corstone-300/README.md) (`target-type: AVH`, using VSocket)
 
 Configure
