@@ -1,0 +1,30 @@
+name: "Build and run AWS MQTT Demo on Arm Virtual Hardware"
+workdir: ./
+backend:
+  aws:
+    ami-version: ~=1.3.0
+    instance-type: t2.large
+upload:
+  - amazon-freertos/**/*
+  - config_files/**/*
+  - Board/**/*
+  - Socket/**/*
+  - RTE/**/*
+  - app_main.c
+  - Demo.*.yml
+  - README.md
+steps:
+  - run: |
+      echo ">csolution -s Demo.csolution.yml list packs -m >packlist"
+      csolution -s Demo.csolution.yml list packs -m >packlist
+      echo ">cpackget add -f packlist -a"
+      cpackget add -f packlist -a
+      echo ">csolution convert -s Demo.csolution.yml -c Demo.Debug+AVH"
+      csolution convert -s Demo.csolution.yml -c Demo.Debug+AVH
+      echo ">cbuild Demo.Debug+AVH.cprj"
+      cbuild Demo.Debug+AVH.cprj
+      echo ">VHT_MPS3_Corstone_SSE-300 -f Board/AVH_MPS3_Corstone-300/fvp_config.txt --stat --simlimit 300 out/Demo/AVH/Debug/Demo.Debug+AVH.axf"
+      VHT_MPS3_Corstone_SSE-300 -f Board/AVH_MPS3_Corstone-300/fvp_config.txt --stat --simlimit 300 out/Demo/AVH/Debug/Demo.Debug+AVH.axf >Demo.log
+      cat Demo.log
+download:
+  - Demo.log

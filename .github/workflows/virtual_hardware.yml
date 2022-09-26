@@ -23,7 +23,7 @@ on:
       - amazon-freertos/**/*
       - config_files/**/*
       - Board/AVH_MPS3_Corstone-300/**/*
-      - Socket/**/*
+      - Socket/VSocket/**/*
       - RTE/**/*
       - app_main.c
       - Demo.*.yml
@@ -53,6 +53,11 @@ jobs:
     - name: Install AVH Client for Python
       run: |
         pip install git+https://github.com/ARM-software/avhclient.git@v0.1
+
+    - name: Update solution file for AVH
+      # Support for CMSIS-Toolbox 1.0.0 (C-CPP instead of C*)
+      run: |
+        sed -i 's/- C\*:/- C-CPP:/g' Demo.csolution.yml
 
     - name: Configure AWS IoT Thing Credentials
       env: 
@@ -87,3 +92,7 @@ jobs:
         retention-days: 1
         if-no-files-found: error
       if: always()
+
+    - name: Check results
+      run: |
+        grep -q "Demo completed successfully." Demo.log
