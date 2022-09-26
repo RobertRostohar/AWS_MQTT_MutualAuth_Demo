@@ -1,0 +1,89 @@
+# The repository needs to provide the following secrets
+# - AWS Access - Settings and credentials to access AWS services for running Arm Virtual Hardware
+#   - AWS_DEFAULT_REGION          The data center region to be used.
+#   - AWS_S3_BUCKET_NAME          The name of the S3 storage bucket to be used for data exchange.
+#   - AWS_IAM_PROFILE             The IAM profile to be used.
+#   - AWS_ASSUME_ROLE             The AWS access role to be assumed.
+#   - AWS_SECURITY_GROUP_ID       The id of the security group to add the EC2 instance to.
+#   - AWS_SUBNET_ID               The id of the network subnet to connect the EC2 instance to.
+# - IoT Cloud Access - Settings and credentials required to connect an AWS IoT Thing
+#   - MQTT_BROKER_ENDPOINT        MQTT broker host name
+#   - IOT_THING_NAME              Client (device) name
+#   - CLIENT_CERTIFICATE_PEM      Client (device) certificate
+#   - CLIENT_PRIVATE_KEY_PEM      Client (device) private key
+
+name: Arm Virtual Hardware
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    paths:
+      - .github/workflows/virtual_hardware.yml
+      - amazon-freertos/**/*
+      - config_files/**/*
+      - Board/AVH_MPS3_Corstone-300/**/*
+      - Socket/**/*
+      - RTE/**/*
+      - app_main.c
+      - Demo.*.yml
+  workflow_dispatch:
+
+env:
+  AWS_S3_BUCKET_NAME: ${{ secrets.AWS_S3_BUCKET_NAME }}
+  AWS_IAM_PROFILE: ${{ secrets.AWS_IAM_PROFILE }}
+  AWS_SECURITY_GROUP_ID: ${{ secrets.AWS_SECURITY_GROUP_ID }}
+  AWS_SUBNET_ID: ${{ secrets.AWS_SUBNET_ID }}
+  
+jobs:
+  ci_test:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+    - name: Check out repository code
+      uses: actions/checkout@v3
+  
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.10'
+
+    - name: Install AVH Client for Python
+      run: |
+        pip install git+https://github.com/ARM-software/avhclient.git@v0.1
+
+    - name: Configure AWS IoT Thing Credentials
+      env: 
+        MQTT_BROKER_ENDPOINT: ${{ secrets.MQTT_BROKER_ENDPOINT }}
+        IOT_THING_NAME: ${{ secrets.IOT_THING_NAME }}
+        CLIENT_CERTIFICATE_PEM: ${{ secrets.CLIENT_CERTIFICATE_PEM }}
+        CLIENT_PRIVATE_KEY_PEM: ${{ secrets.CLIENT_PRIVATE_KEY_PEM }}
+      run: |
+        cd amazon-freertos/demos/include
+        envsubst <aws_clientcredential.h.in >aws_clientcredential.h
+        envsubst <aws_clientcredential_keys.h.in >aws_clientcredential_keys.h
+
+    - uses: ammaraskar/gcc-problem-matcher@master
+
+    - name: Configure AWS AVH Access Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: ${{ secrets.AWS_ASSUME_ROLE }}
+        aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+    - name: Run Demo
+      id: avh
+      run: |
+        avhclient -b aws execute --specfile avh.yml
+
+    - name: Archive results
+      uses: actions/upload-artifact@v2
+      with:
+        name: results
+        path: |
+          Demo.log
+        retention-days: 1
+        if-no-files-found: error
+      if: always()
