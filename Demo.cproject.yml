@@ -11,6 +11,18 @@ project:
   #   - pack: AWS::corePKCS11@3.0.0-Beta
   #   - pack: Arm-Packs::PKCS11
 
+  # interfaces:
+  #   - provides:
+  #     - FreeRTOS:
+  #     - RTOS2:
+  #   - consumes:
+  #     - IoT_Socket:
+  #     - C_VIO:
+  #     - STDOUT:
+  #     - STDIN:
+  #     - STDERR:
+  #     - Heap : 65536
+
   add-paths:
     - ./config_files
     - ./amazon-freertos/demos/include
@@ -105,7 +117,13 @@ project:
       files:
         - file: ./amazon-freertos/ports/pkcs11/core_pkcs11_pal.c
 
+  # requires-layers:
+  #   - Socket
+  #   - Security
+  #   - Board
+
   layers:
+    # Socket
     - layer: ./Socket/FreeRTOS+TCP/Socket.clayer.yml
       for-type:
         - +IP-Stack
@@ -116,6 +134,7 @@ project:
       for-type:
         - +AVH
 
+    # Board
     - layer: ./Board/IMXRT1050-EVKB/Board.clayer.yml
       for-type: 
         - +IP-Stack

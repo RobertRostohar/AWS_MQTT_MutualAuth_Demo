@@ -19,6 +19,12 @@ Running the VHT in uVision requires the following settings:
 Running the VHT via command line (from project root directory and VHT executable in path):
 `VHT_MPS3_Corstone_SSE-300 -f Board/AVH_MPS3_Corstone-300/fvp_config.txt -a <image>`
 
+> Note: running on fast computers can lead to simulation running too quickly resulting in dropping incoming data packets from the network. 
+  This will be seen as error messages in the terminal window.  
+  Reduce the number of ticks to simulate for each quantum by specifying the following command line option `-Q <n>`, 
+  where `<n>` is the number of ticks (default value = 10000).  
+  Example: `-Q 10`
+
 
 ### System Configuration
 

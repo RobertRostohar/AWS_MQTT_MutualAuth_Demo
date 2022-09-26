@@ -9,9 +9,15 @@ Visit [*coreMQTT mutual authentication demo*](https://docs.aws.amazon.com/freert
 Please note, that [*properly configured thing*](https://docs.aws.amazon.com/iot/latest/developerguide/iot-moisture-create-thing.html) is required to
 successfully run the demo application.
 
-Configuration
--------------
-In uVision open Project window, expand `Target` and `demos_include` group and locate files:
+Targets:
+--------
+  - NXP [IMXRT1050-EVKB](./Board/IMXRT1050-EVKB/README.md) Board (`target-type: IP-Stack`, using FreeRTOS+TCP over Ethernet)
+  - STMicroelectronics [B-U585I-IOT02A Board](./Board/B-U585I-IOT02A/README.md) (`target-type: WiFi`, using on-board WiFi module)
+  - [Arm Virtual Hardware for Corstone-300](./Board/AVH_MPS3_Corstone-300/README.md) (`target-type: AVH`, using VSocket)
+
+Configure
+---------
+Locate the following files (in subdirectory `amazon-freertos/demos/include`):
 - `aws_clientcredential.h`
 - `aws_clientcredential_keys.h`.
 
@@ -23,9 +29,23 @@ Modify the following definitions:
 - `keyCLIENT_CERTIFICATE_PEM`: Client Certificate
 - `keyCLIENT_PRIVATE_KEY_PEM`: Client Private Key
 
-Once the application is configured you can:
-- Build the application.
+
+Build
+-----
+1. Prerequisites:
+   - [CMSIS-Toolbox 0.10.2](https://github.com/Open-CMSIS-Pack/devtools/releases/tag/tools%2Ftoolbox%2F0.10.2)
+   - Arm Compiler 6.18 or later
+2. Create `.cprj` project using `csolution`:  
+   `csolution convert -s Demo.csolution.yml -c Demo.<build-type>+<target-type>`  
+     - `<build-type>:  Debug | Release`
+     - `<target-type>: IP-Stack | WiFi | AVH`
+3. Build `.cprj` project using `cbuild`:  
+   `cbuild Demo.<build-type>+<target-type>.cprj`
+
+Run
+---
 - Connect and configure the debugger.
 - Run the application and view messages in a debug printf or terminal window.
+>Note: click on Target links above for target specific information.
 
 MQTT messages can be viewed in the [**AWS IoT console**](https://docs.aws.amazon.com/iot/latest/developerguide/view-mqtt-messages.html).

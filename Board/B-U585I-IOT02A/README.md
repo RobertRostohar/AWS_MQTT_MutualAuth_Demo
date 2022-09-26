@@ -66,9 +66,9 @@ Refer to ["Migrate STM32 Based Example Projects to Custom Hardware"](https://git
   - Press the **USER** (blue) button to start the firmware update
   - Wait for programming to finish, serial terminal display should look like below:
     ```
-    Boot done sucessfully
+    Boot done successfully
     STM32>Waiting EMW3080 ready for programming (you should wait for more than 20 seconds before getting any message)
-    Transfering packet ...
+    Transferring packet ...
     CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
     ...
     CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
