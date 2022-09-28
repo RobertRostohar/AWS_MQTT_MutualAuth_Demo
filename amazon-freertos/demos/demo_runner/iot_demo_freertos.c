@@ -354,7 +354,7 @@ void runDemoTask( void * pArgument )
 
     /* DO NOT EDIT - This demo end marker is used in the test framework to
      * determine the end of a demo. */
-    IotLogInfo( "-------DEMO FINISHED-------\n" );
+    IotLogInfo( "-------DEMO FINISHED-------\n\x04" );
 }
 
 /*-----------------------------------------------------------*/
