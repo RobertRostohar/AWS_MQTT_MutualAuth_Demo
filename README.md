@@ -17,18 +17,20 @@ Targets:
 
 Configure
 ---------
-Locate the following files (in subdirectory `amazon-freertos/demos/include`):
-- `aws_clientcredential.h`
-- `aws_clientcredential_keys.h`.
 
-Modify the following definitions:
-- `clientcredentialMQTT_BROKER_ENDPOINT`: Remote Host Address (AWS IoT->Settings in AWS IoT console)
-- `clientcredentialIOT_THING_NAME`: Thing Name (AWS IoT->Manage->Things->Name in AWS IoT console)
-- `clientcredentialWIFI_SSID`: WiFi Access Point SSID (when connecting via WiFi, can be empty otherwise)
-- `clientcredentialWIFI_PASSWORD`: WiFi Access Point Password (when connecting via WiFi, can be empty otherwise)
-- `keyCLIENT_CERTIFICATE_PEM`: Client Certificate
-- `keyCLIENT_PRIVATE_KEY_PEM`: Client Private Key
+Configure AWS IoT Thing:
+  - Modify the following definitions in [aws_clientcredential.h](amazon-freertos/demos/include/aws_clientcredential.h):
+    - `clientcredentialMQTT_BROKER_ENDPOINT`: Remote Host Address (AWS IoT->Settings in AWS IoT console)
+    - `clientcredentialIOT_THING_NAME`: Thing Name (AWS IoT->Manage->Things->Name in AWS IoT console)
+  - Modify the following definitions in [aws_clientcredential_keys.h](amazon-freertos/demos/include/aws_clientcredential_keys.h):
+    - `keyCLIENT_CERTIFICATE_PEM`: Client Certificate
+    - `keyCLIENT_PRIVATE_KEY_PEM`: Client Private Key
 
+Configure WiFi Access Point (when connecting via WiFi):
+  - Modify the following definitions in [socket_startup.c](Socket/WiFi/socket_startup.c):
+    - `SSID`:          WiFi Access Point SSID
+    - `PASSWORD`:      WiFi Access Point Password
+    - `SECURITY_TYPE`: WiFi Access Point Security
 
 Build
 -----
@@ -54,6 +56,7 @@ MQTT messages can be viewed in the [**AWS IoT console**](https://docs.aws.amazon
 CI Testing
 ----------
 To build and run this application with a CI workflow on GitHub the following steps are required. For details refer to [Run AMI with GitHub Actions](https://arm-software.github.io/AVH/main/infrastructure/html/run_ami_github.html).
+
 1. **Amazon Web Service (AWS) account** with:
     - Amazon EC2 (elastic cloud) access
     - Amazon S3 (storage) access

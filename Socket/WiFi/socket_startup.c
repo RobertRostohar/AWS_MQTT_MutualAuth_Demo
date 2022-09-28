@@ -21,10 +21,9 @@
 #include <stdio.h>
 
 #include "Driver_WiFi.h"
-#include "aws_clientcredential.h"
 
-#define SSID            clientcredentialWIFI_SSID
-#define PASSWORD        clientcredentialWIFI_PASSWORD
+#define SSID            ""
+#define PASSWORD        ""
 #define SECURITY_TYPE   ARM_WIFI_SECURITY_WPA2
 
 extern ARM_DRIVER_WIFI Driver_WiFi0;
