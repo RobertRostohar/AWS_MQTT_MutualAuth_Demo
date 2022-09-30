@@ -40,7 +40,7 @@
  * in "aws_iot_network.h"
  */
 
-#define configSUPPORTED_NETWORKS    ( AWSIOT_NETWORK_TYPE_WIFI | AWSIOT_NETWORK_TYPE_ETH )
+#define configSUPPORTED_NETWORKS    ( AWSIOT_NETWORK_TYPE_ETH )
 
 /**
  * @brief Configuration flag which is used to enable one or more network interfaces for a board.
