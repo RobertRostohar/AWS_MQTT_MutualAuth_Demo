@@ -15,14 +15,14 @@ layer:
   #     - IoT_Socket:
 
   # packs:
-  #   - pack: AWS::FreeRTOS-Plus-TCP@2.3.2-Beta
+  #   - pack: AWS::FreeRTOS-Plus-TCP@4.0.1
   #   - pack: MDK-Packs::IoT_Socket
 
   add-paths:
     - .
 
   components:
-    - component: AWS::FreeRTOS:FreeRTOS+ TCP:Buffer Management&Buffer Allocation 2
+    - component: AWS::FreeRTOS:FreeRTOS+ TCP:Buffer Allocation&Buffer Allocation 2
     - component: AWS::FreeRTOS:FreeRTOS+ TCP:Compiler Port&Keil
     - component: AWS::FreeRTOS:FreeRTOS+ TCP:Core Library
     - component: AWS::FreeRTOS:FreeRTOS+ TCP:Network Interface&Custom

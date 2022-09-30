@@ -5,10 +5,10 @@ project:
   #   - pack: ARM::CMSIS
   #   - pack: ARM::CMSIS-FreeRTOS@10.4.6
   #   - pack: ARM::mbedTLS@1.7.0
-  #   - pack: AWS::backoffAlgorithm@1.0.0-Beta
-  #   - pack: AWS::coreMQTT@1.1.0-Beta
-  #   - pack: AWS::coreMQTT_Agent@1.0.1-Beta
-  #   - pack: AWS::corePKCS11@3.0.0-Beta
+  #   - pack: AWS::backoffAlgorithm@4.0.0
+  #   - pack: AWS::coreMQTT@4.0.0
+  #   - pack: AWS::coreMQTT_Agent@4.0.0
+  #   - pack: AWS::corePKCS11@4.0.1
   #   - pack: Arm-Packs::PKCS11
 
   # interfaces:
@@ -56,11 +56,13 @@ project:
     - component: AWS::FreeRTOS:backoffAlgorithm
     - component: AWS::FreeRTOS:coreMQTT
     - component: AWS::FreeRTOS:coreMQTT Agent
-    - component: AWS::FreeRTOS:corePKCS11&Custom
+
+    - component: AWS::FreeRTOS:corePKCS11:Core Library
+    - component: AWS::FreeRTOS:corePKCS11:Portable Abstraction Layer&Custom
+    - component: AWS::FreeRTOS:corePKCS11:Utilities
+    - component: AWS::Security:PKCS11:corePKCS11
       defines:
         - MBEDTLS_CONFIG_FILE="aws_mbedtls_config.h"
-
-    - component: AWS::Security:PKCS11&No Implementation
 
   groups:
     - group: Documentation
