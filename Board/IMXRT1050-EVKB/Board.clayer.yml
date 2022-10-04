@@ -26,10 +26,10 @@ layer:
   #   - pack: ARM::CMSIS
   #   - pack: ARM::CMSIS-Driver
   #   - pack: Keil::ARM_Compiler
-  #   - pack: NXP::MIMXRT1052_DFP@13.1.0
-  #   - pack: NXP::EVKB-IMXRT1050_BSP@13.1.0
-  #   - pack: Keil::IMXRT1050-EVKB_BSP@1.0.0
-  #   - pack: Keil::iMXRT105x_MWP@1.4.0
+  #   - pack: NXP::MIMXRT1052_DFP@15.0.0
+  #   - pack: NXP::EVKB-IMXRT1050_BSP@15.0.0
+  #   - pack: Keil::IMXRT1050-EVKB_BSP@1.1.0
+  #   - pack: Keil::iMXRT105x_MWP@1.5.0
 
   add-paths:
     - .
@@ -38,7 +38,9 @@ layer:
     - SDK_DEBUGCONSOLE=1
     # - __MCUXPRESSO
     - ETH_PHY_REF_CLK_50M=1
-    - SDK_I2C_BASED_COMPONENT_USED
+    - VIO_SENSOR_DISABLE
+    - CODEC_WM8960_ENABLE
+    - FSL_SDK_ENABLE_DRIVER_CACHE_CONTROL=1
     - SKIP_SYSCLK_INIT
     - XIP_BOOT_HEADER_DCD_ENABLE=1
     - XIP_BOOT_HEADER_ENABLE=1
@@ -55,7 +57,10 @@ layer:
     - component: NXP::Device:CMSIS:MIMXRT1052_header
     - component: NXP::Device:CMSIS:MIMXRT1052_system
 
+    - component: NXP::Device:SDK Drivers:cache
     - component: NXP::Device:SDK Drivers:clock
+    - component: NXP::Device:SDK Drivers:codec
+    - component: NXP::Device:SDK Drivers:codec_i2c
     - component: NXP::Device:SDK Drivers:common
     - component: NXP::Device:SDK Drivers:dmamux
     - component: NXP::Device:SDK Drivers:edma
@@ -65,15 +70,21 @@ layer:
     - component: NXP::Device:SDK Drivers:i2c
     - component: NXP::Device:SDK Drivers:iomuxc
     - component: NXP::Device:SDK Drivers:lists
+    - component: NXP::Device:SDK Drivers:lpi2c_adapter
     - component: NXP::Device:SDK Drivers:lpuart
     - component: NXP::Device:SDK Drivers:lpuart_adapter
     - component: NXP::Device:SDK Drivers:lpuart_edma
     - component: NXP::Device:SDK Drivers:nic301
+    - component: NXP::Device:SDK Drivers:sai
+    - component: NXP::Device:SDK Drivers:sai_edma
     - component: NXP::Device:SDK Drivers:sdhc
+    - component: NXP::Device:SDK Drivers:wm8960
+    - component: NXP::Device:SDK Drivers:wm8960_adapter
     - component: NXP::Device:SDK Drivers:xip_device
 
     - component: NXP::Device:SDK Project Template:RTE_Device
 
+    - component: NXP::Device:SDK Utilities:assert
     - component: NXP::Device:SDK Utilities:debug_console
       # defines:
       #   - SDK_DEBUGCONSOLE=1
@@ -94,6 +105,8 @@ layer:
     - component: ARM::CMSIS Driver:USART:Custom
     - component: NXP::CMSIS Driver:USART:lpuart_cmsis
     - component: Keil::CMSIS Driver:VIO:Board&IMXRT1050-EVKB
+      # defines:
+      #   - VIO_SENSOR_DISABLE
 
     - component: Keil::Compiler&ARM Compiler:Event Recorder&DAP
     - component: Keil::Compiler&ARM Compiler:I/O:STDERR&User
@@ -108,7 +121,7 @@ layer:
       files:
         - file: ./main.c
         - file: ./retarget_stdio.c
-        - file: ../../RTE/Device/MIMXRT1052DVL6B/MIMXRT1052xxxxx.scf
+        - file: ../../RTE/Device/MIMXRT1052DVL6B/MIMXRT1052xxxxx_flexspi_nor_sdram.scf
     - group: MCUXpresso
       files:
         - file: ./IMXRT1050-EVKB.mex

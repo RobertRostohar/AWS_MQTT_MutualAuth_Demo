@@ -15,6 +15,7 @@ board: IMXRT1050-EVKB
 functionalGroups:
 - name: BOARD_InitPeripherals
   UUID: 25111475-f962-49d5-8113-e93fee7f4424
+  called_from_default_init: true
   selectedCore: core0
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 
@@ -89,4 +90,5 @@ void BOARD_InitPeripherals(void)
  **********************************************************************************************************************/
 void BOARD_InitBootPeripherals(void)
 {
+  BOARD_InitPeripherals();
 }

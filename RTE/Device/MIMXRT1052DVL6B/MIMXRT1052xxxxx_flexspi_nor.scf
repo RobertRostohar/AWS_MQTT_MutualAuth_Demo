@@ -9,7 +9,7 @@
 **     Compiler:            Keil ARM C/C++ Compiler
 **     Reference manual:    IMXRT1050RM Rev.2.1, 12/2018 | IMXRT1050SRM Rev.2
 **     Version:             rev. 1.0, 2018-09-21
-**     Build:               b210227
+**     Build:               b210709
 **
 **     Abstract:
 **         Linker file for the Keil ARM C/C++ Compiler
@@ -25,6 +25,8 @@
 **
 ** ###################################################################
 */
+
+/* Modified by Keil */
 
 #if (defined(__ram_vector_table__))
   #define __ram_vector_table_size__    0x00000400
@@ -53,6 +55,8 @@
 #define m_data_start                   (m_interrupts_ram_start + m_interrupts_ram_size)
 #define m_data_size                    (0x00020000 - m_interrupts_ram_size)
 
+#define m_data_noinit_size             0x00000500
+
 #define m_data2_start                  0x20200000
 #define m_data2_size                   0x00040000
 
@@ -66,7 +70,7 @@
 #if (defined(__heap_size__))
   #define Heap_Size                    __heap_size__
 #else
-  #define Heap_Size                    0x0400
+  #define Heap_Size                    0x10000
 #endif
 
 #if defined(XIP_BOOT_HEADER_ENABLE) && (XIP_BOOT_HEADER_ENABLE == 1)
@@ -97,11 +101,15 @@ LR_m_text m_interrupts_start m_text_start+m_text_size-m_interrupts_start {   ; l
   VECTOR_RAM m_interrupts_start EMPTY 0 {
   }
 #endif
-  RW_m_data m_data_start m_data_size-Stack_Size-Heap_Size { ; RW data
+  RW_m_data m_data_start m_data_size-Stack_Size-Heap_Size-m_data_noinit_size { ; RW data
     .ANY (+RW +ZI)
     * (RamFunction)
     * (NonCacheable.init)
     * (*NonCacheable)
+    * (DataQuickAccess)
+  }
+  RW_NOINIT +0 UNINIT {                ; RW uninitialized data
+    * (.bss.noinit)
   }
   ARM_LIB_HEAP +0 EMPTY Heap_Size {    ; Heap region growing up
   }

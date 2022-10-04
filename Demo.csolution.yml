@@ -17,10 +17,10 @@ solution:
 
     - pack: ARM::V2M_MPS3_SSE_300_BSP@1.2.0
 
-    - pack: NXP::MIMXRT1052_DFP@13.1.0
-    - pack: NXP::EVKB-IMXRT1050_BSP@13.1.0
-    - pack: Keil::IMXRT1050-EVKB_BSP@1.0.0
-    - pack: Keil::iMXRT105x_MWP@1.4.0
+    - pack: NXP::MIMXRT1052_DFP@15.0.0
+    - pack: NXP::EVKB-IMXRT1050_BSP@15.0.0
+    - pack: Keil::IMXRT1050-EVKB_BSP@1.1.0
+    - pack: Keil::iMXRT105x_MWP@1.5.0
 
     - pack: Keil::STM32U5xx_DFP@2.0.0
     - pack: Keil::B-U585I-IOT02A_BSP@1.0.0

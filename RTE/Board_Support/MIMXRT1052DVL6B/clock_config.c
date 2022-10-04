@@ -15,11 +15,11 @@
 
 /* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 !!GlobalInfo
-product: Clocks v9.0
+product: Clocks v10.0
 processor: MIMXRT1052xxxxB
 package_id: MIMXRT1052DVL6B
 mcu_data: ksdk2_0
-processor_version: 11.0.1
+processor_version: 12.0.1
 board: IMXRT1050-EVKB
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 
@@ -33,8 +33,6 @@ board: IMXRT1050-EVKB
 /*******************************************************************************
  * Variables
  ******************************************************************************/
-/* System clock frequency. */
-extern uint32_t SystemCoreClock;
 
 /*******************************************************************************
  ************************ BOARD_InitBootClocks function ************************
@@ -53,7 +51,7 @@ name: BOARD_BootClockRUN
 called_from_default_init: true
 outputs:
 - {id: AHB_CLK_ROOT.outFreq, value: 600 MHz}
-- {id: CAN_CLK_ROOT.outFreq, value: 40 MHz}
+- {id: CAN_CLK_ROOT.outFreq, value: 20 MHz}
 - {id: CKIL_SYNC_CLK_ROOT.outFreq, value: 32.768 kHz}
 - {id: CLK_1M.outFreq, value: 1 MHz}
 - {id: CLK_24M.outFreq, value: 24 MHz}
@@ -63,44 +61,52 @@ outputs:
 - {id: ENET_REF_CLK.outFreq, value: 50 MHz}
 - {id: FLEXIO1_CLK_ROOT.outFreq, value: 30 MHz}
 - {id: FLEXIO2_CLK_ROOT.outFreq, value: 30 MHz}
-- {id: FLEXSPI_CLK_ROOT.outFreq, value: 160 MHz}
+- {id: FLEXSPI_CLK_ROOT.outFreq, value: 1440/11 MHz}
 - {id: GPT1_ipg_clk_highfreq.outFreq, value: 75 MHz}
 - {id: GPT2_ipg_clk_highfreq.outFreq, value: 75 MHz}
 - {id: IPG_CLK_ROOT.outFreq, value: 150 MHz}
-- {id: LCDIF_CLK_ROOT.outFreq, value: 67.5/7 MHz}
+- {id: LCDIF_CLK_ROOT.outFreq, value: 1080/19 MHz}
 - {id: LPI2C_CLK_ROOT.outFreq, value: 60 MHz}
 - {id: LPSPI_CLK_ROOT.outFreq, value: 105.6 MHz}
 - {id: LVDS1_CLK.outFreq, value: 1.2 GHz}
-- {id: MQS_MCLK.outFreq, value: 1080/17 MHz}
+- {id: MQS_MCLK.outFreq, value: 1080/29 MHz}
 - {id: PERCLK_CLK_ROOT.outFreq, value: 75 MHz}
 - {id: PLL7_MAIN_CLK.outFreq, value: 24 MHz}
-- {id: SAI1_CLK_ROOT.outFreq, value: 1080/17 MHz}
-- {id: SAI1_MCLK1.outFreq, value: 1080/17 MHz}
-- {id: SAI1_MCLK2.outFreq, value: 1080/17 MHz}
+- {id: SAI1_CLK_ROOT.outFreq, value: 12.28875 MHz}
+- {id: SAI1_MCLK1.outFreq, value: 12.28875 MHz}
+- {id: SAI1_MCLK2.outFreq, value: 12.28875 MHz}
 - {id: SAI1_MCLK3.outFreq, value: 30 MHz}
-- {id: SAI2_CLK_ROOT.outFreq, value: 1080/17 MHz}
-- {id: SAI2_MCLK1.outFreq, value: 1080/17 MHz}
+- {id: SAI2_CLK_ROOT.outFreq, value: 960/203 MHz}
+- {id: SAI2_MCLK1.outFreq, value: 960/203 MHz}
 - {id: SAI2_MCLK3.outFreq, value: 30 MHz}
-- {id: SAI3_CLK_ROOT.outFreq, value: 1080/17 MHz}
-- {id: SAI3_MCLK1.outFreq, value: 1080/17 MHz}
+- {id: SAI3_CLK_ROOT.outFreq, value: 1080/29 MHz}
+- {id: SAI3_MCLK1.outFreq, value: 1080/29 MHz}
 - {id: SAI3_MCLK3.outFreq, value: 30 MHz}
 - {id: SEMC_CLK_ROOT.outFreq, value: 75 MHz}
 - {id: SPDIF0_CLK_ROOT.outFreq, value: 30 MHz}
 - {id: TRACE_CLK_ROOT.outFreq, value: 352/3 MHz}
 - {id: UART_CLK_ROOT.outFreq, value: 80 MHz}
-- {id: USDHC1_CLK_ROOT.outFreq, value: 198 MHz}
-- {id: USDHC2_CLK_ROOT.outFreq, value: 198 MHz}
+- {id: USDHC1_CLK_ROOT.outFreq, value: 4752/29 MHz}
+- {id: USDHC2_CLK_ROOT.outFreq, value: 4752/29 MHz}
 settings:
 - {id: CCM.AHB_PODF.scale, value: '1', locked: true}
 - {id: CCM.ARM_PODF.scale, value: '2', locked: true}
-- {id: CCM.FLEXSPI_PODF.scale, value: '3', locked: true}
-- {id: CCM.FLEXSPI_SEL.sel, value: CCM.PLL3_SW_CLK_SEL}
-- {id: CCM.LCDIF_PODF.scale, value: '8', locked: true}
-- {id: CCM.LCDIF_PRED.scale, value: '7', locked: true}
+- {id: CCM.CAN_CLK_PODF.scale, value: '4'}
+- {id: CCM.FLEXSPI_PODF.scale, value: '2', locked: true}
+- {id: CCM.FLEXSPI_SEL.sel, value: CCM_ANALOG.PLL3_PFD0_CLK}
+- {id: CCM.LCDIF_PODF.scale, value: '4', locked: true}
+- {id: CCM.LCDIF_PRED.scale, value: '2', locked: true}
+- {id: CCM.LCDIF_PRE_CLK_SEL.sel, value: CCM_ANALOG.PLL3_PFD3_CLK}
 - {id: CCM.LPSPI_PODF.scale, value: '5', locked: true}
 - {id: CCM.PERCLK_PODF.scale, value: '2', locked: true}
-- {id: CCM.SEMC_PODF.scale, value: '8'}
+- {id: CCM.SAI1_CLK_PODF.scale, value: '16'}
+- {id: CCM.SAI1_CLK_PRED.scale, value: '1', locked: true}
+- {id: CCM.SAI1_CLK_SEL.sel, value: CCM_ANALOG.PLL4_MAIN_CLK}
+- {id: CCM.SAI2_CLK_PODF.scale, value: '63'}
+- {id: CCM.SAI2_CLK_PRED.scale, value: '1', locked: true}
+- {id: CCM.SEMC_PODF.scale, value: '8', locked: true}
 - {id: CCM.TRACE_PODF.scale, value: '3', locked: true}
+- {id: CCM_ANALOG.AUDIO_DIV.scale, value: '4'}
 - {id: CCM_ANALOG.PLL1_BYPASS.sel, value: CCM_ANALOG.PLL1}
 - {id: CCM_ANALOG.PLL1_PREDIV.scale, value: '1', locked: true}
 - {id: CCM_ANALOG.PLL1_VDIV.scale, value: '50', locked: true}
@@ -110,20 +116,27 @@ settings:
 - {id: CCM_ANALOG.PLL2_PFD0_BYPASS.sel, value: CCM_ANALOG.PLL2_PFD0}
 - {id: CCM_ANALOG.PLL2_PFD1_BYPASS.sel, value: CCM_ANALOG.PLL2_PFD1}
 - {id: CCM_ANALOG.PLL2_PFD2_BYPASS.sel, value: CCM_ANALOG.PLL2_PFD2}
+- {id: CCM_ANALOG.PLL2_PFD2_DIV.scale, value: '29'}
 - {id: CCM_ANALOG.PLL2_PFD3_BYPASS.sel, value: CCM_ANALOG.PLL2_PFD3}
 - {id: CCM_ANALOG.PLL3_BYPASS.sel, value: CCM_ANALOG.PLL3}
 - {id: CCM_ANALOG.PLL3_PFD0_BYPASS.sel, value: CCM_ANALOG.PLL3_PFD0}
 - {id: CCM_ANALOG.PLL3_PFD0_DIV.scale, value: '33', locked: true}
 - {id: CCM_ANALOG.PLL3_PFD0_MUL.scale, value: '18', locked: true}
 - {id: CCM_ANALOG.PLL3_PFD1_BYPASS.sel, value: CCM_ANALOG.PLL3_PFD1}
+- {id: CCM_ANALOG.PLL3_PFD1_DIV.scale, value: '27'}
 - {id: CCM_ANALOG.PLL3_PFD2_BYPASS.sel, value: CCM_ANALOG.PLL3_PFD2}
+- {id: CCM_ANALOG.PLL3_PFD2_DIV.scale, value: '29'}
 - {id: CCM_ANALOG.PLL3_PFD3_BYPASS.sel, value: CCM_ANALOG.PLL3_PFD3}
-- {id: CCM_ANALOG.PLL4.denom, value: '50'}
-- {id: CCM_ANALOG.PLL4.div, value: '47'}
+- {id: CCM_ANALOG.PLL4.denom, value: '100', locked: true}
+- {id: CCM_ANALOG.PLL4.div, value: '32', locked: true}
+- {id: CCM_ANALOG.PLL4.num, value: '77', locked: true}
+- {id: CCM_ANALOG.PLL4_BYPASS.sel, value: CCM_ANALOG.PLL4_POST_DIV}
+- {id: CCM_ANALOG.PLL4_POST_DIV.scale, value: '1', locked: true}
 - {id: CCM_ANALOG.PLL5.denom, value: '1'}
 - {id: CCM_ANALOG.PLL5.div, value: '40'}
 - {id: CCM_ANALOG.PLL5.num, value: '0'}
 - {id: CCM_ANALOG.PLL6_BYPASS.sel, value: CCM_ANALOG.PLL6}
+- {id: CCM_ANALOG_PLL_AUDIO_POWERDOWN_CFG, value: 'No'}
 - {id: CCM_ANALOG_PLL_USB1_POWER_CFG, value: 'Yes'}
 - {id: IOMUXC_GPR.ENET_REF_CLK_SEL.sel, value: CCM_ANALOG.ENET_125M_CLK}
 sources:
@@ -148,6 +161,14 @@ const clock_sys_pll_config_t sysPllConfig_BOARD_BootClockRUN =
 const clock_usb_pll_config_t usb1PllConfig_BOARD_BootClockRUN =
     {
         .loopDivider = 0,                         /* PLL loop divider, Fout = Fin * 20 */
+        .src = 0,                                 /* Bypass clock source, 0 - OSC 24M, 1 - CLK1_P and CLK1_N */
+    };
+const clock_audio_pll_config_t audioPllConfig_BOARD_BootClockRUN =
+    {
+        .loopDivider = 32,                        /* PLL loop divider, Fout = Fin * ( loopDivider + numerator / denominator ) */
+        .postDivider = 4,                         /* Divider after PLL */
+        .numerator = 77,                          /* 30 bit numerator of fractional loop divider, Fout = Fin * ( loopDivider + numerator / denominator ) */
+        .denominator = 100,                       /* 30 bit denominator of fractional loop divider, Fout = Fin * ( loopDivider + numerator / denominator ) */
         .src = 0,                                 /* Bypass clock source, 0 - OSC 24M, 1 - CLK1_P and CLK1_N */
     };
 const clock_enet_pll_config_t enetPllConfig_BOARD_BootClockRUN =
@@ -241,9 +262,9 @@ void BOARD_BootClockRUN(void)
     /* Disable Flexspi clock gate. */
     CLOCK_DisableClock(kCLOCK_FlexSpi);
     /* Set FLEXSPI_PODF. */
-    CLOCK_SetDiv(kCLOCK_FlexspiDiv, 2);
+    CLOCK_SetDiv(kCLOCK_FlexspiDiv, 1);
     /* Set Flexspi clock source. */
-    CLOCK_SetMux(kCLOCK_FlexspiMux, 1);
+    CLOCK_SetMux(kCLOCK_FlexspiMux, 3);
 #endif
     /* Disable CSI clock gate. */
     CLOCK_DisableClock(kCLOCK_Csi);
@@ -269,17 +290,17 @@ void BOARD_BootClockRUN(void)
     /* Disable SAI1 clock gate. */
     CLOCK_DisableClock(kCLOCK_Sai1);
     /* Set SAI1_CLK_PRED. */
-    CLOCK_SetDiv(kCLOCK_Sai1PreDiv, 3);
+    CLOCK_SetDiv(kCLOCK_Sai1PreDiv, 0);
     /* Set SAI1_CLK_PODF. */
-    CLOCK_SetDiv(kCLOCK_Sai1Div, 1);
+    CLOCK_SetDiv(kCLOCK_Sai1Div, 15);
     /* Set Sai1 clock source. */
-    CLOCK_SetMux(kCLOCK_Sai1Mux, 0);
+    CLOCK_SetMux(kCLOCK_Sai1Mux, 2);
     /* Disable SAI2 clock gate. */
     CLOCK_DisableClock(kCLOCK_Sai2);
     /* Set SAI2_CLK_PRED. */
-    CLOCK_SetDiv(kCLOCK_Sai2PreDiv, 3);
+    CLOCK_SetDiv(kCLOCK_Sai2PreDiv, 0);
     /* Set SAI2_CLK_PODF. */
-    CLOCK_SetDiv(kCLOCK_Sai2Div, 1);
+    CLOCK_SetDiv(kCLOCK_Sai2Div, 62);
     /* Set Sai2 clock source. */
     CLOCK_SetMux(kCLOCK_Sai2Mux, 0);
     /* Disable SAI3 clock gate. */
@@ -304,7 +325,7 @@ void BOARD_BootClockRUN(void)
     CLOCK_DisableClock(kCLOCK_Can1S);
     CLOCK_DisableClock(kCLOCK_Can2S);
     /* Set CAN_CLK_PODF. */
-    CLOCK_SetDiv(kCLOCK_CanDiv, 1);
+    CLOCK_SetDiv(kCLOCK_CanDiv, 3);
     /* Set Can clock source. */
     CLOCK_SetMux(kCLOCK_CanMux, 2);
     /* Disable UART clock gate. */
@@ -323,11 +344,11 @@ void BOARD_BootClockRUN(void)
     /* Disable LCDIF clock gate. */
     CLOCK_DisableClock(kCLOCK_LcdPixel);
     /* Set LCDIF_PRED. */
-    CLOCK_SetDiv(kCLOCK_LcdifPreDiv, 6);
+    CLOCK_SetDiv(kCLOCK_LcdifPreDiv, 1);
     /* Set LCDIF_CLK_PODF. */
-    CLOCK_SetDiv(kCLOCK_LcdifDiv, 7);
+    CLOCK_SetDiv(kCLOCK_LcdifDiv, 3);
     /* Set Lcdif pre clock source. */
-    CLOCK_SetMux(kCLOCK_LcdifPreMux, 5);
+    CLOCK_SetMux(kCLOCK_LcdifPreMux, 1);
     /* Disable SPDIF clock gate. */
     CLOCK_DisableClock(kCLOCK_Spdif);
     /* Set SPDIF0_CLK_PRED. */
@@ -370,7 +391,7 @@ void BOARD_BootClockRUN(void)
     /* Init System pfd1. */
     CLOCK_InitSysPfd(kCLOCK_Pfd1, 16);
     /* Init System pfd2. */
-    CLOCK_InitSysPfd(kCLOCK_Pfd2, 24);
+    CLOCK_InitSysPfd(kCLOCK_Pfd2, 29);
     /* Init System pfd3. */
     CLOCK_InitSysPfd(kCLOCK_Pfd3, 16);
 #endif
@@ -383,23 +404,34 @@ void BOARD_BootClockRUN(void)
     /* Init Usb1 pfd0. */
     CLOCK_InitUsb1Pfd(kCLOCK_Pfd0, 33);
     /* Init Usb1 pfd1. */
-    CLOCK_InitUsb1Pfd(kCLOCK_Pfd1, 16);
+    CLOCK_InitUsb1Pfd(kCLOCK_Pfd1, 27);
     /* Init Usb1 pfd2. */
-    CLOCK_InitUsb1Pfd(kCLOCK_Pfd2, 17);
+    CLOCK_InitUsb1Pfd(kCLOCK_Pfd2, 29);
     /* Init Usb1 pfd3. */
     CLOCK_InitUsb1Pfd(kCLOCK_Pfd3, 19);
     /* Disable Usb1 PLL output for USBPHY1. */
     CCM_ANALOG->PLL_USB1 &= ~CCM_ANALOG_PLL_USB1_EN_USB_CLKS_MASK;
 #endif
-    /* DeInit Audio PLL. */
-    CLOCK_DeinitAudioPll();
-    /* Bypass Audio PLL. */
-    CLOCK_SetPllBypass(CCM_ANALOG, kCLOCK_PllAudio, 1);
-    /* Set divider for Audio PLL. */
-    CCM_ANALOG->MISC2 &= ~CCM_ANALOG_MISC2_AUDIO_DIV_LSB_MASK;
-    CCM_ANALOG->MISC2 &= ~CCM_ANALOG_MISC2_AUDIO_DIV_MSB_MASK;
-    /* Enable Audio PLL output. */
-    CCM_ANALOG->PLL_AUDIO |= CCM_ANALOG_PLL_AUDIO_ENABLE_MASK;
+    /* Init Audio PLL. */
+    uint32_t pllAudio;
+    /* Disable Audio PLL output before initial Audio PLL. */
+    CCM_ANALOG->PLL_AUDIO &= ~CCM_ANALOG_PLL_AUDIO_ENABLE_MASK;
+    /* Bypass PLL first */
+    CCM_ANALOG->PLL_AUDIO = (CCM_ANALOG->PLL_AUDIO & (~CCM_ANALOG_PLL_AUDIO_BYPASS_CLK_SRC_MASK)) |
+                            CCM_ANALOG_PLL_AUDIO_BYPASS_MASK | CCM_ANALOG_PLL_AUDIO_BYPASS_CLK_SRC(0);
+    CCM_ANALOG->PLL_AUDIO_NUM = CCM_ANALOG_PLL_AUDIO_NUM_A(77);
+    CCM_ANALOG->PLL_AUDIO_DENOM = CCM_ANALOG_PLL_AUDIO_DENOM_B(100);
+    pllAudio = (CCM_ANALOG->PLL_AUDIO & (~(CCM_ANALOG_PLL_AUDIO_DIV_SELECT_MASK | CCM_ANALOG_PLL_AUDIO_POWERDOWN_MASK))) |
+               CCM_ANALOG_PLL_AUDIO_ENABLE_MASK | CCM_ANALOG_PLL_AUDIO_DIV_SELECT(32);
+    pllAudio |= CCM_ANALOG_PLL_AUDIO_POST_DIV_SELECT(2);
+    CCM_ANALOG->MISC2 |= CCM_ANALOG_MISC2_AUDIO_DIV_LSB_MASK;
+    CCM_ANALOG->MISC2 |= CCM_ANALOG_MISC2_AUDIO_DIV_MSB_MASK;
+    CCM_ANALOG->PLL_AUDIO = pllAudio;
+    while ((CCM_ANALOG->PLL_AUDIO & CCM_ANALOG_PLL_AUDIO_LOCK_MASK) == 0)
+    {
+    }
+    /* Disable bypass for Audio PLL. */
+    CLOCK_SetPllBypass(CCM_ANALOG, kCLOCK_PllAudio, 0);
     /* DeInit Video PLL. */
     CLOCK_DeinitVideoPll();
     /* Bypass Video PLL. */

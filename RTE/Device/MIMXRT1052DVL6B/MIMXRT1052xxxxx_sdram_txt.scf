@@ -9,7 +9,7 @@
 **     Compiler:            Keil ARM C/C++ Compiler
 **     Reference manual:    IMXRT1050RM Rev.2.1, 12/2018 | IMXRT1050SRM Rev.2
 **     Version:             rev. 1.0, 2018-09-21
-**     Build:               b210227
+**     Build:               b210709
 **
 **     Abstract:
 **         Linker file for the Keil ARM C/C++ Compiler
@@ -26,6 +26,8 @@
 ** ###################################################################
 */
 
+/* Modified by Keil */
+
 #define m_interrupts_start             0x80000000
 #define m_interrupts_size              0x00000400
 
@@ -37,6 +39,8 @@
 
 #define m_data_start                   0x20200000
 #define m_data_size                    0x00040000
+
+#define m_data_noinit_size             0x00000500
 
 #define m_data2_start                  0x20000000
 #define m_data2_size                   0x00020000
@@ -73,11 +77,14 @@ LR_m_text m_interrupts_start m_text_start+m_text_size-m_interrupts_start {   ; l
 #if (defined(__heap_noncacheable__))
   RW_m_data m_data_start m_data_size-Stack_Size { ; RW data
 #else
-  RW_m_data m_data_start m_data_size-Stack_Size-Heap_Size { ; RW data
+  RW_m_data m_data_start m_data_size-Stack_Size-Heap_Size-m_ncache_size-m_data_noinit_size { ; RW data
 #endif
     .ANY (+RW +ZI)
-    *(*m_usb_dma_init_data)
-    *(*m_usb_dma_noninit_data)
+    * (*m_usb_dma_init_data)
+    * (*m_usb_dma_noninit_data)
+  }
+  RW_NOINIT +0 UNINIT {                ; RW uninitialized data
+    * (.bss.noinit)
   }
 #if (!defined(__heap_noncacheable__))
   ARM_LIB_HEAP +0 EMPTY Heap_Size {    ; Heap region growing up
@@ -87,6 +94,9 @@ LR_m_text m_interrupts_start m_text_start+m_text_size-m_interrupts_start {   ; l
   }
   RW_m_ram_text m_qacode_start m_qacode_size { ;
     * (CodeQuickAccess)
+  }
+  RW_m_data2 m_data2_start m_data2_size { ;
+    * (DataQuickAccess)
   }
 #if (defined(__heap_noncacheable__))
   RW_m_ncache m_ncache_start m_ncache_size - Heap_Size { ; ncache RW data
