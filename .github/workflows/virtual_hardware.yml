@@ -54,11 +54,6 @@ jobs:
       run: |
         pip install git+https://github.com/ARM-software/avhclient.git@v0.1
 
-    - name: Update solution file for AVH
-      # Support for CMSIS-Toolbox 1.0.0 (C-CPP instead of C*)
-      run: |
-        sed -i 's/- C\*:/- C-CPP:/g' Demo.csolution.yml
-
     - name: Configure AWS IoT Thing Credentials
       env: 
         MQTT_BROKER_ENDPOINT: ${{ secrets.MQTT_BROKER_ENDPOINT }}
