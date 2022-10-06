@@ -192,7 +192,7 @@
  * @brief The maximum number of times to call MQTT_ProcessLoop() when polling
  * for a specific packet from the broker.
  */
-#define MQTT_PROCESS_LOOP_PACKET_WAIT_COUNT_MAX           ( 30U )
+#define MQTT_PROCESS_LOOP_PACKET_WAIT_COUNT_MAX           ( 4U )
 
 /**
  * @brief Keep alive time reported to the broker while establishing
