@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/Open-CMSIS-Pack/devtools/schemas/projmgr/0.9.4/tools/projmgr/schemas/clayer.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Open-CMSIS-Pack/devtools/schemas/projmgr/1.0.0/tools/projmgr/schemas/clayer.schema.json
 
 layer:
   # type: Board
@@ -36,6 +36,12 @@ layer:
 
   defines:
     - MX_WIFI_SPI_DMA=0   # Do not use DMA if TZEN=1
+    - RTE_Compiler_IO_STDIN
+    - RTE_Compiler_IO_STDIN_User
+    - RTE_Compiler_IO_STDOUT
+    - RTE_Compiler_IO_STDOUT_User
+    - RTE_Compiler_IO_STDERR
+    - RTE_Compiler_IO_STDERR_User
 
   components:
     - component: Keil::Device:Startup
@@ -85,12 +91,13 @@ layer:
     - component: Keil::CMSIS Driver:WiFi:EMW3080
 
     - component: Keil::Compiler&ARM Compiler:Event Recorder&DAP
-    - component: Keil::Compiler&ARM Compiler:I/O:STDERR&User
-    - component: Keil::Compiler&ARM Compiler:I/O:STDOUT&User
-    - component: Keil::Compiler&ARM Compiler:I/O:STDIN&User
+    # - component: Keil::Compiler&ARM Compiler:I/O:STDERR&User
+    # - component: Keil::Compiler&ARM Compiler:I/O:STDOUT&User
+    # - component: Keil::Compiler&ARM Compiler:I/O:STDIN&User
 
   groups:
     - group: Board
       files:
         - file: ./arduino.c
         - file: ./retarget_stdio.c
+        - file: ../../clib/gcc/retarget_io.c
