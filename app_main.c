@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include "main.h"
 #include "cmsis_os2.h"
+#include "cmsis_vio.h"
 #include "FreeRTOS.h"
 #include "iot_logging_task.h"
 #include "aws_demo.h"
@@ -49,6 +50,17 @@ const HeapRegion_t xHeapRegions[] = {
  { NULL, 0 }
 };
 #endif
+
+/*---------------------------------------------------------------------------
+ * Read sensor and encode in string
+ *---------------------------------------------------------------------------*/
+void ReadSensorMessage (char *buf) {
+  vioValueXYZ_t coord;
+
+  coord = vioGetXYZ(vioMotionAccelero);
+
+  sprintf (buf, "Accel(X: %d, Y: %d, Z: %d)", coord.X, coord.Y, coord.Z);
+}
 
 /*---------------------------------------------------------------------------
  * Application main thread

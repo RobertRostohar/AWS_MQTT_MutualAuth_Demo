@@ -175,7 +175,8 @@
 /**
  * @brief The MQTT message published in this example.
  */
-#define mqttexampleMESSAGE                                "Hello World!"
+//#define mqttexampleMESSAGE                                "Hello World!"
+char mqttexampleMESSAGE[128];
 
 /**
  * @brief Time in ticks to wait between each cycle of the demo implemented
@@ -458,6 +459,8 @@ static MQTTFixedBuffer_t xBuffer =
 
 /*-----------------------------------------------------------*/
 
+extern void ReadSensorMessage (char *buf);
+
 /*
  * @brief The example shown below uses MQTT APIs to create MQTT messages and
  * send them over the mutually authenticated network connection established with the
@@ -550,6 +553,7 @@ int RunCoreMqttMutualAuthDemo( bool awsIotMqttMode,
              ulPublishCount++ )
         {
             LogInfo( ( "Publish to the MQTT topic %s.", mqttexampleTOPIC ) );
+            ReadSensorMessage ( mqttexampleMESSAGE );
             xDemoStatus = prvMQTTPublishToTopic( &xMQTTContext );
 
             if( xDemoStatus == pdPASS )
