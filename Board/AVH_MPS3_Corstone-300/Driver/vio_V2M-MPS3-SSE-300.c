@@ -260,6 +260,9 @@ vioValueXYZ_t vioGetXYZ (uint32_t id) {
 #endif
 
   valueXYZ = vioValueXYZ[index];
+  vioValueXYZ[index].X += 1;
+  vioValueXYZ[index].Y += 2;
+  vioValueXYZ[index].Z += 5;
 
   return valueXYZ;
 }
