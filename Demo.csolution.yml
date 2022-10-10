@@ -34,34 +34,5 @@ solution:
     - type: AVH
       device: ARM::SSE-300-MPS3
 
-  build-types:
-    - type: Debug
-      compiler: AC6
-      misc:
-        - C:
-          - -O1
-          - -g
-          - -Wno-macro-redefined
-          - -Wno-pragma-pack
-          - -Wno-parentheses-equality
-          - -std=c99
-        - ASM:
-          - -masm=auto
-        - Link:
-          - --entry=Reset_Handler
-    - type: Release
-      compiler: AC6
-      misc:
-        - C:
-          - -O3
-          - -Wno-macro-redefined
-          - -Wno-pragma-pack
-          - -Wno-parentheses-equality
-          - -std=c99
-        - ASM:
-          - -masm=auto
-        - Link:
-          - --entry=Reset_Handler
-
   projects:
     - project: ./Demo.cproject.yml
