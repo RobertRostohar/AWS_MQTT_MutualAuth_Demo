@@ -120,7 +120,8 @@ int stdin_getchar (void) {
     cnt = uart_rx_idx_i - uart_rx_idx_o;
     if (cnt > 0U) {
       idx = uart_rx_idx_o & (UART_BUFFER_SIZE - 1U);
-      ch = uart_rx_buf[uart_rx_idx_o++];
+      ch = uart_rx_buf[idx];
+      uart_rx_idx_o++;
     }
     else {
       osEventFlagsWait(uart_rx_evt_id, UART_RX_EVENT, osFlagsWaitAny, osWaitForever);
