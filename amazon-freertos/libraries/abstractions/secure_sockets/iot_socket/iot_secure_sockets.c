@@ -724,9 +724,6 @@ int32_t SOCKETS_SetSockOpt (Socket_t xSocket, int32_t lLevel, int32_t lOptionNam
         }
         break;
 
-      case SOCKETS_SO_WAKEUP_CALLBACK:
-        break;
-
       case SOCKETS_SO_REQUIRE_TLS:
         if ((xSocket->flags & SSOCK_FLAGS_CONNECTED) == 0) {
           xSocket->flags |= SSOCK_FLAGS_USE_TLS;
@@ -787,6 +784,7 @@ int32_t SOCKETS_SetSockOpt (Socket_t xSocket, int32_t lLevel, int32_t lOptionNam
         }
         break;
 
+      case SOCKETS_SO_WAKEUP_CALLBACK:
       case SOCKETS_SO_ALPN_PROTOCOLS:
       case SOCKETS_SO_TCPKEEPALIVE:
       case SOCKETS_SO_TCPKEEPALIVE_INTERVAL:
