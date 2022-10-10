@@ -1,0 +1,46 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "Run VHT",
+			"command": "VHT_Corstone_SSE-300_Ethos-U55.exe",
+			"args": [
+				"-f",
+				"Board\\AVH_MPS3_Corstone-300\\fvp_config.txt",
+				"${command:cmsis-csolution.getBinaryFile}",
+				"-Q",
+				"10"
+			],
+			"problemMatcher": [],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"type": "embedded-debug.flash",
+			"serialNumber": "${command:device-manager.getSerialNumber}",
+			"program": "${command:cmsis-csolution.getBinaryFile}",
+			"cmsisPack": "${env:CMSIS_PACK_ROOT}/.Download/NXP.MIMXRT1052_DFP.15.0.0.pack",
+			"problemMatcher": [],
+			"label": "embedded-debug.flash: Flash MIMXRT1052",
+			"group": "build"
+		},
+		{
+			"type": "embedded-debug.flash",
+			"serialNumber": "${command:device-manager.getSerialNumber}",
+			"program": "${command:cmsis-csolution.getBinaryFile}",
+			"cmsisPack": "${env:CMSIS_PACK_ROOT}/.Download/Keil.STM32U5xx_DFP.2.0.0.pack",
+			"problemMatcher": [],
+			"label": "embedded-debug.flash: Flash STM32U5xx",
+			"group": "build"
+		},
+		{
+			"type": "cmsis-csolution.build",
+			"project": "${command:cmsis-csolution.getCprjPath}",
+			"problemMatcher": [],
+			"label": "cmsis-csolution.build: Build"
+		}
+	]
+}
