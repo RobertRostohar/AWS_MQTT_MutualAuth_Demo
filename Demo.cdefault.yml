@@ -1,32 +1,51 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/Open-CMSIS-Pack/devtools/schemas/projmgr/0.9.4/tools/projmgr/schemas/cdefault.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Open-CMSIS-Pack/devtools/schemas/projmgr/1.0.0/tools/projmgr/schemas/cdefault.schema.json
 
 default:
+  compiler: AC6
 
   build-types:
     - type: Debug
-      compiler: AC6
       misc:
-        - C:
-          - -O1
-          - -g
-          - -Wno-macro-redefined
-          - -Wno-pragma-pack
-          - -Wno-parentheses-equality
-          - -std=c99
-        - ASM:
-          - -masm=auto
-        - Link:
-          - --entry=Reset_Handler
+        - for-compiler: AC6
+          C:
+            - -O1
+            - -g
+            - -Wno-macro-redefined
+            - -Wno-pragma-pack
+            - -Wno-parentheses-equality
+            - -std=c99
+          ASM:
+            - -masm=auto
+          Link:
+            - --entry=Reset_Handler
+        - for-compiler: GCC
+          C:
+            - -O1
+            - -g
+            - -Wall
+            - -std=gnu99
+          Link:
+            - --specs=nosys.specs
+            - --entry=Reset_Handler
     - type: Release
-      compiler: AC6
       misc:
-        - C:
-          - -O3
-          - -Wno-macro-redefined
-          - -Wno-pragma-pack
-          - -Wno-parentheses-equality
-          - -std=c99
-        - ASM:
-          - -masm=auto
-        - Link:
-          - --entry=Reset_Handler
+        - for-compiler: AC6
+          C:
+            - -O3
+            - -Wno-macro-redefined
+            - -Wno-pragma-pack
+            - -Wno-parentheses-equality
+            - -std=c99
+          ASM:
+            - -masm=auto
+          Link:
+            - --entry=Reset_Handler
+        - for-compiler: GCC
+          C:
+            - -O3
+            - -g
+            - -Wall
+            - -std=gnu99
+          Link:
+            - --specs=nosys.specs
+            - --entry=Reset_Handler
