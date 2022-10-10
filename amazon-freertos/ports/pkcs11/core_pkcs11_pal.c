@@ -62,7 +62,7 @@ Certificate_t ClientCertificate;
 Certificate_t ClientPrivateKey;
 Certificate_t CodeVerifyKey;
 
-PKCS11_Keys_t PKCS11_Key[] = {
+PKCS11_Keys_t PKCS11_Key = {
   &ClientCertificate,
   &ClientPrivateKey,
   &CodeVerifyKey
@@ -85,14 +85,14 @@ CK_RV PKCS11_PAL_Initialize (void) {
   Certificate_t *cert;
 
   /* Copy device certificate */
-  cert = PKCS11_Key->ClientCertificate;
+  cert = PKCS11_Key.ClientCertificate;
 
   memcpy (cert->Pem, keyCLIENT_CERTIFICATE_PEM, sizeof(keyCLIENT_CERTIFICATE_PEM));
   cert->Size   = sizeof(keyCLIENT_CERTIFICATE_PEM);
   cert->Status = CERTIFICATE_STATUS_PRESENT;
 
   /* Copy private key */
-  cert = PKCS11_Key->ClientPrivateKey;
+  cert = PKCS11_Key.ClientPrivateKey;
 
   memcpy (cert->Pem, keyCLIENT_PRIVATE_KEY_PEM, sizeof(keyCLIENT_PRIVATE_KEY_PEM));
   cert->Size   = sizeof(keyCLIENT_PRIVATE_KEY_PEM);
@@ -125,7 +125,7 @@ CK_OBJECT_HANDLE PKCS11_PAL_SaveObject (CK_ATTRIBUTE_PTR pxLabel, CK_BYTE_PTR pu
   else {
     if (strcmp (pxLabel->pValue, pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS) == 0) {
       /* Device private key label is specified */
-      cert = PKCS11_Key->ClientPrivateKey;
+      cert = PKCS11_Key.ClientPrivateKey;
 
       /* Copy certificate */
       memcpy (cert->Pem, pucData, ulDataSize);
@@ -145,7 +145,7 @@ CK_OBJECT_HANDLE PKCS11_PAL_SaveObject (CK_ATTRIBUTE_PTR pxLabel, CK_BYTE_PTR pu
     }
     else if (strcmp (pxLabel->pValue, pkcs11configLABEL_DEVICE_CERTIFICATE_FOR_TLS) == 0) {
       /* Client certificate label is specified */
-      cert = PKCS11_Key->ClientCertificate;
+      cert = PKCS11_Key.ClientCertificate;
 
       /* Copy certificate */
       memcpy (cert->Pem, pucData, ulDataSize);
@@ -159,7 +159,7 @@ CK_OBJECT_HANDLE PKCS11_PAL_SaveObject (CK_ATTRIBUTE_PTR pxLabel, CK_BYTE_PTR pu
     }
     else if (strcmp (pxLabel->pValue, pkcs11configLABEL_CODE_VERIFICATION_KEY) == 0) {
       /* Code verification key label is specified */
-      cert = PKCS11_Key->CodeVerifyKey;
+      cert = PKCS11_Key.CodeVerifyKey;
 
       /* Copy certificate */
       memcpy (cert->Pem, pucData, ulDataSize);
@@ -381,9 +381,9 @@ static Certificate_t *cert_from_handle (CK_OBJECT_HANDLE h) {
   Certificate_t *cert;
 
   switch (h) {
-    case eDevicePrivateKey:  cert = PKCS11_Key->ClientPrivateKey;  break;
+    case eDevicePrivateKey:  cert = PKCS11_Key.ClientPrivateKey;   break;
     case eDevicePublicKey:   cert = NULL;                          break;
-    case eDeviceCertificate: cert = PKCS11_Key->ClientCertificate; break;
+    case eDeviceCertificate: cert = PKCS11_Key.ClientCertificate;  break;
     case eCodeSigningKey:    cert = NULL;                          break;
     case eJitpCertificate:   cert = NULL;                          break;
     case eRootCertificate:   cert = NULL;                          break;
