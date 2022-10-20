@@ -34,7 +34,7 @@ env:
   AWS_IAM_PROFILE: ${{ secrets.AWS_IAM_PROFILE }}
   AWS_SECURITY_GROUP_ID: ${{ secrets.AWS_SECURITY_GROUP_ID }}
   AWS_SUBNET_ID: ${{ secrets.AWS_SUBNET_ID }}
-  
+
 jobs:
   ci_test:
     runs-on: ubuntu-latest
@@ -44,9 +44,9 @@ jobs:
     steps:
     - name: Check out repository code
       uses: actions/checkout@v3
-  
+
     - name: Set up Python 3.10
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v4
       with:
         python-version: '3.10'
 
@@ -55,7 +55,7 @@ jobs:
         pip install git+https://github.com/ARM-software/avhclient.git@v0.1
 
     - name: Configure AWS IoT Thing Credentials
-      env: 
+      env:
         MQTT_BROKER_ENDPOINT: ${{ secrets.MQTT_BROKER_ENDPOINT }}
         IOT_THING_NAME: ${{ secrets.IOT_THING_NAME }}
         CLIENT_CERTIFICATE_PEM: ${{ secrets.CLIENT_CERTIFICATE_PEM }}
@@ -68,7 +68,7 @@ jobs:
     - uses: ammaraskar/gcc-problem-matcher@master
 
     - name: Configure AWS AVH Access Credentials
-      uses: aws-actions/configure-aws-credentials@v1
+      uses: aws-actions/configure-aws-credentials@v1-node16
       with:
         role-to-assume: ${{ secrets.AWS_ASSUME_ROLE }}
         aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
