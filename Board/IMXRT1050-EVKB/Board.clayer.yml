@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/Open-CMSIS-Pack/devtools/schemas/projmgr/0.9.4/tools/projmgr/schemas/clayer.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Open-CMSIS-Pack/devtools/schemas/projmgr/1.0.0/tools/projmgr/schemas/clayer.schema.json
 
 layer:
   # type: Board
@@ -45,17 +45,15 @@ layer:
     - XIP_BOOT_HEADER_DCD_ENABLE=1
     - XIP_BOOT_HEADER_ENABLE=1
     - XIP_EXTERNAL_FLASH=1
-
-  misc:
-    - Link:
-      - '--predefine="-DXIP_BOOT_HEADER_ENABLE=1"'
-      - '--diag_suppress 6314,6329'
+    - RTE_Compiler_IO_STDIN
+    - RTE_Compiler_IO_STDIN_User
+    - RTE_Compiler_IO_STDOUT
+    - RTE_Compiler_IO_STDOUT_User
+    - RTE_Compiler_IO_STDERR
+    - RTE_Compiler_IO_STDERR_User
 
   components:
-    - component: Device:Startup
-
     - component: NXP::Device:CMSIS:MIMXRT1052_header
-    - component: NXP::Device:CMSIS:MIMXRT1052_system
 
     - component: NXP::Device:SDK Drivers:cache
     - component: NXP::Device:SDK Drivers:clock
@@ -109,9 +107,9 @@ layer:
       #   - VIO_SENSOR_DISABLE
 
     - component: Keil::Compiler&ARM Compiler:Event Recorder&DAP
-    - component: Keil::Compiler&ARM Compiler:I/O:STDERR&User
-    - component: Keil::Compiler&ARM Compiler:I/O:STDOUT&User
-    - component: Keil::Compiler&ARM Compiler:I/O:STDIN&User
+    # - component: Keil::Compiler&ARM Compiler:I/O:STDERR&User
+    # - component: Keil::Compiler&ARM Compiler:I/O:STDOUT&User
+    # - component: Keil::Compiler&ARM Compiler:I/O:STDIN&User
 
     # - component: Keil::CMSIS Driver:WiFi:ESP8266&UART
     # - component: Keil::CMSIS Driver:WiFi:WizFi360&UART
@@ -121,7 +119,10 @@ layer:
       files:
         - file: ./main.c
         - file: ./retarget_stdio.c
-        - file: ./RTE/Device/MIMXRT1052DVL6B/MIMXRT1052xxxxx_flexspi_nor_sdram.scf
+        - file: ./RTE/Device/MIMXRT1052DVL6B/MIMXRT1052xxxxx_flexspi_nor.ld
+        - file: ./RTE/Device/MIMXRT1052DVL6B/startup_MIMXRT1052.S
+        - file: ./system_MIMXRT1052.c
+        - file: ../../clib/gcc/retarget_io.c
     - group: MCUXpresso
       files:
         - file: ./IMXRT1050-EVKB.mex
