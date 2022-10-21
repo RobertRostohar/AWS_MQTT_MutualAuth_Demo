@@ -63,8 +63,14 @@ jobs:
         CLIENT_PRIVATE_KEY_PEM: ${{ secrets.CLIENT_PRIVATE_KEY_PEM }}
       run: |
         cd amazon-freertos/demos/include
-        envsubst <aws_clientcredential.h.in >aws_clientcredential.h
-        envsubst <aws_clientcredential_keys.h.in >aws_clientcredential_keys.h
+        cp aws_clientcredential_keys.h aws_clientcredential_keys.h.in
+        sed -i 's|\(#define keyCLIENT_CERTIFICATE_PEM \).*NULL|\1 ${CLIENT_CERTIFICATE_PEM}|' aws_clientcredential_keys.h.in
+        sed -i 's|\(#define keyCLIENT_PRIVATE_KEY_PEM \).*NULL|\1 ${CLIENT_PRIVATE_KEY_PEM}|' aws_clientcredential_keys.h.in
+        envsubst < aws_clientcredential_keys.h.in > aws_clientcredential_keys.h
+        cp aws_clientcredential.h aws_clientcredential.h.in
+        sed -i 's|\(#define clientcredentialMQTT_BROKER_ENDPOINT \).*""|\1 "${MQTT_BROKER_ENDPOINT}"|' aws_clientcredential.h.in
+        sed -i 's|\(#define clientcredentialIOT_THING_NAME \).*""|\1 "${IOT_THING_NAME}"|' aws_clientcredential.h.in
+        envsubst < aws_clientcredential.h.in > aws_clientcredential.h
 
     - uses: ammaraskar/gcc-problem-matcher@master
 
