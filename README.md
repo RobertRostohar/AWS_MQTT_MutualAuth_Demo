@@ -45,6 +45,11 @@ Build
 3. Build `.cprj` project using `cbuild`:  
    `cbuild Demo.<build-type>+<target-type>.cprj`
 
+Program
+--------
+- Download the executable file (.axf) to the microcontroller using a programmer or Drag-and-drop programming if available.
+>Note: not required for Virtual Hardware.
+
 Run
 ---
 - Connect and configure the debugger.
