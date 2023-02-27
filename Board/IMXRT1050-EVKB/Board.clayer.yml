@@ -21,14 +21,14 @@ layer:
         - STDERR
         - Heap: 65536
 
-  # packs:
-  #   - pack: ARM::CMSIS
-  #   - pack: ARM::CMSIS-Driver
-  #   - pack: Keil::ARM_Compiler
-  #   - pack: NXP::MIMXRT1052_DFP@15.0.0
-  #   - pack: NXP::EVKB-IMXRT1050_BSP@15.0.0
-  #   - pack: Keil::IMXRT1050-EVKB_BSP@1.1.0
-  #   - pack: Keil::iMXRT105x_MWP@1.5.0
+  packs:
+    - pack: NXP::MIMXRT1052_DFP@15.0.0
+    - pack: NXP::EVKB-IMXRT1050_BSP@15.0.0
+    - pack: Keil::IMXRT1050-EVKB_BSP@1.1.0
+    - pack: Keil::iMXRT105x_MWP@1.5.0
+    - pack: ARM::CMSIS@5.9.0
+    - pack: ARM::CMSIS-Driver@2.7.2
+    - pack: Keil::ARM_Compiler@1.7.2
 
   add-path:
     - .

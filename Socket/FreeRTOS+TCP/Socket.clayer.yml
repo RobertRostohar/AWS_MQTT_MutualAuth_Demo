@@ -15,9 +15,9 @@ layer:
       provides:
         - IoT_Socket
 
-  # packs:
-  #   - pack: AWS::FreeRTOS-Plus-TCP@4.0.1
-  #   - pack: MDK-Packs::IoT_Socket
+  packs:
+    - pack: AWS::FreeRTOS-Plus-TCP@4.0.1
+    - pack: MDK-Packs::IoT_Socket
 
   add-path:
     - .
