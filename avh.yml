@@ -15,11 +15,11 @@ upload:
   - README.md
 steps:
   - run: |
-      echo "Upgrade to CMSIS-Toolbox 1.2.0"
-      wget https://github.com/Open-CMSIS-Pack/cmsis-toolbox/releases/download/1.2.0/cmsis-toolbox-linux64.tar.gz
+      echo "Upgrade to CMSIS-Toolbox 1.5.0"
+      wget https://github.com/Open-CMSIS-Pack/cmsis-toolbox/releases/download/1.5.0/cmsis-toolbox-linux-amd64.tar.gz
       sudo mv /opt/ctools/ /opt/ctools-1.0.0
-      sudo tar -xf cmsis-toolbox-linux64.tar.gz --directory /opt/
-      sudo mv /opt/cmsis-toolbox-linux64/ /opt/ctools/
+      sudo tar -xf cmsis-toolbox-linux-amd64.tar.gz --directory /opt/
+      sudo mv /opt/cmsis-toolbox-linux-amd64/ /opt/ctools/
       sudo sed -i 's|set(TOOLCHAIN_ROOT ".*")|set(TOOLCHAIN_ROOT "'$(dirname $(which armclang 2>/dev/null))'")|' $(find /opt/ctools/etc/ -type f -name "AC6*.cmake")
       sudo sed -i 's|set(TOOLCHAIN_ROOT ".*")|set(TOOLCHAIN_ROOT "'$(dirname $(which arm-none-eabi-gcc 2>/dev/null))'")|' $(find /opt/ctools/etc/ -type f -name "GCC*.cmake")
   - run: |
@@ -31,8 +31,8 @@ steps:
       csolution convert -s Demo.csolution.yml -c Demo.Debug+AVH
       echo ">cbuild Demo.Debug+AVH.cprj"
       cbuild Demo.Debug+AVH.cprj
-      echo ">VHT_MPS3_Corstone_SSE-300 -f Board/AVH_MPS3_Corstone-300/fvp_config.txt --stat --simlimit 600 out/Demo/AVH/Debug/Demo.Debug+AVH.axf"
-      VHT_MPS3_Corstone_SSE-300 -f Board/AVH_MPS3_Corstone-300/fvp_config.txt --stat --simlimit 600 out/Demo/AVH/Debug/Demo.Debug+AVH.axf >Demo.log
+      echo ">VHT_MPS3_Corstone_SSE-300 -f Board/AVH_MPS3_Corstone-300/fvp_config.txt --stat --simlimit 600 out/Demo/AVH/Debug/Debug+AVH.axf"
+      VHT_MPS3_Corstone_SSE-300 -f Board/AVH_MPS3_Corstone-300/fvp_config.txt --stat --simlimit 600 out/Demo/AVH/Debug/Debug+AVH.axf >Demo.log
       cat Demo.log
 download:
   - Demo.log
