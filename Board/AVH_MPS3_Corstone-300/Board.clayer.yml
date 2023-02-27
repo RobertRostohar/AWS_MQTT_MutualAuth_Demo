@@ -7,17 +7,18 @@ layer:
   description: Board setup for IoT with VSocket and Ethernet interface
   for-device: ARM::SSE-300-MPS3
 
-  # interfaces:
-  #   - consumes:
-  #     - RTOS2:
-  #   - provides:
-  #     - VSocket
-  #     - C_ETH: 0
-  #     - C_VIO:
-  #     - STDOUT:
-  #     - STDIN:
-  #     - STDERR:
-  #     - Heap : 65536
+  connections:
+    - connect: AVH_MPS3_Cortsone-300 Board
+      consumes:
+        - CMSIS-RTOS2
+      provides:
+        - VSocket
+        - CMSIS_ETH: 0
+        - CMSIS_VIO
+        - STDIN
+        - STDOUT
+        - STDERR
+        - Heap: 65536
 
   # packs:
   #   - pack: ARM::CMSIS
