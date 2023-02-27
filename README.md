@@ -91,7 +91,7 @@ Secret Name                    | Description
 :------------------------------|:--------------------
 **AWS Access**                 | **Settings and credentials to access AWS services for running Arm Virtual Hardware**
 `AWS_IAM_PROFILE`              | The [IAM Instance Profile](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html) associated with the AVH EC2 instance granting it access to required AWS resources.
-`AWS_ASSUME_ROLE`              | The AWS access role to be assumed for AWS access.
+`AWS_ASSUME_ROLE`              | The role to be assumed for AWS access. Use the [AWS CloudFormation template](https://github.com/ARM-software/AVH-GetStarted/tree/main/infrastructure/cloudformation) to set this up.
 `AWS_S3_BUCKET_NAME`           | The name of the [S3 storage bucket](https://docs.aws.amazon.com/AmazonS3/latest/userguide/creating-buckets-s3.html) to be used for temporary data storage by Arm Virtual Hardware.
 `AWS_DEFAULT_REGION`           | The data center region for running new AVH AMI. For example `eu-west-1`.
 `AWS_SECURITY_GROUP_ID`        | The id of the [VPC security group](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html) to add the EC2 instance to. Shall have format `sg-xxxxxxxx`.
