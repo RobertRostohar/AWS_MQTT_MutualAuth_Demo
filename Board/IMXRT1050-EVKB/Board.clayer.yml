@@ -7,20 +7,19 @@ layer:
   description: Board setup for IoT with WiFi and Ethernet interface
   for-device: NXP::MIMXRT1052DVL6B
 
-  # interfaces:
-  #   - consumes:
-  #     - RTOS2:
-  #     - A_UART: *     # Arduino module
-  #   - provides:
-  #     - C_WiFi: 0     # Arduino module
-  #     - C_ETH: 0
-  #     - C_MCI: 0
-  #     - A_UART: 3
-  #     - C_VIO:
-  #     - STDOUT:
-  #     - STDIN:
-  #     - STDERR:
-  #     - Heap : 65536
+  connections:
+    - connect: IMXRT1050-EVKB Board
+      consumes:
+        - CMSIS-RTOS2
+      provides:
+        - CMSIS_ETH: 0
+        - CMSIS_MCI: 0
+        - CMSIS_VIO
+        - ARDUINO_UNO_UART: 3
+        - STDIN
+        - STDOUT
+        - STDERR
+        - Heap: 65536
 
   # packs:
   #   - pack: ARM::CMSIS

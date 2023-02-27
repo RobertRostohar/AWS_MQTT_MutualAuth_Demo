@@ -7,20 +7,19 @@ layer:
   description: Board setup for IoT with WiFi interface
   for-board: STMicroelectronics::B-U585I-IOT02A
 
-  # interfaces:
-  #   - consumes:
-  #     - RTOS2:
-  #   - provides:
-  #     - C_WiFi: 0
-  #     - A_UART: 3
-  #     - A_SPI: 1
-  #     - A_IO9_I:
-  #     - A_IO10_O:
-  #     - C_VIO:
-  #     - STDOUT:
-  #     - STDIN:
-  #     - STDERR:
-  #     - Heap : 65536
+  connections:
+    - connect: B-U585I-IOT02A Board
+      consumes:
+        - CMSIS-RTOS2
+      provides:
+        - CMSIS_WiFi: 0
+        - CMSIS_VIO
+        - ARDUINO_UNO_UART: 3
+        - ARDUINO_UNO_SPI: 1
+        - STDIN
+        - STDOUT
+        - STDERR
+        - Heap: 65536
 
   # packs:
   #   - pack: ARM::CMSIS

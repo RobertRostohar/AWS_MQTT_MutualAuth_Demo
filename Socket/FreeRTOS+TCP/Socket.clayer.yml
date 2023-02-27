@@ -6,13 +6,14 @@ layer:
   # variant: Ethernet
   description: IoT Socket interface using FreeRTOS+TCP over Ethernet
 
-  # interfaces:
-  #   - consumes:
-  #     - C_ETH: 0
-  #     - FreeRTOS:
-  #     - RTOS2:
-  #   - provides:
-  #     - IoT_Socket:
+  connections:
+    - connect: FreeRTOS+TCP Socket
+      consumes:
+        - CMSIS_ETH: 0
+        - CMSIS-RTOS2
+        - FreeRTOS
+      provides:
+        - IoT_Socket
 
   # packs:
   #   - pack: AWS::FreeRTOS-Plus-TCP@4.0.1
