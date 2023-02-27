@@ -20,11 +20,11 @@ layer:
         - STDERR
         - Heap: 65536
 
-  # packs:
-  #   - pack: ARM::CMSIS
-  #   - pack: ARM::CMSIS-Driver
-  #   - pack: Keil::ARM_Compiler
-  #   - pack: ARM::V2M_MPS3_SSE_300_BSP@1.2.0
+  packs:
+    - pack: ARM::V2M_MPS3_SSE_300_BSP@1.2.0
+    - pack: ARM::CMSIS@5.9.0
+    - pack: ARM::CMSIS-Driver@2.7.2
+    - pack: Keil::ARM_Compiler@1.7.2
 
   processor:
     trustzone: secure
