@@ -1,11 +1,11 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/Open-CMSIS-Pack/devtools/schemas/projmgr/0.9.4/tools/projmgr/schemas/clayer.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Open-CMSIS-Pack/devtools/schemas/projmgr/1.5.0/tools/projmgr/schemas/clayer.schema.json
 
 layer:
-  # type: Board
+  type: Board
   # name: B-U585I-IOT02A
   # variant: IoT-WiFi
   description: Board setup for IoT with WiFi interface
-  # for-board: B-U585I-IOT02A
+  for-board: STMicroelectronics::B-U585I-IOT02A
 
   # interfaces:
   #   - consumes:
@@ -31,10 +31,10 @@ layer:
   processor:
     trustzone: off
 
-  add-paths:
+  add-path:
     - .
 
-  defines:
+  define:
     - MX_WIFI_SPI_DMA=0   # Do not use DMA if TZEN=1
 
   components:

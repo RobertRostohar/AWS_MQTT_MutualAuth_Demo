@@ -1,11 +1,11 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/Open-CMSIS-Pack/devtools/schemas/projmgr/0.9.4/tools/projmgr/schemas/clayer.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Open-CMSIS-Pack/devtools/schemas/projmgr/1.5.0/tools/projmgr/schemas/clayer.schema.json
 
 layer:
-  # type: Board
+  type: Board
   # name: IMXRT1050-EVKB
   # variant: IoT-WiFi-Ethernet
   description: Board setup for IoT with WiFi and Ethernet interface
-  # for-device: MIMXRT1052DVL6B
+  for-device: NXP::MIMXRT1052DVL6B
 
   # interfaces:
   #   - consumes:
@@ -31,10 +31,10 @@ layer:
   #   - pack: Keil::IMXRT1050-EVKB_BSP@1.1.0
   #   - pack: Keil::iMXRT105x_MWP@1.5.0
 
-  add-paths:
+  add-path:
     - .
 
-  defines:
+  define:
     - SDK_DEBUGCONSOLE=1
     # - __MCUXPRESSO
     - ETH_PHY_REF_CLK_50M=1
@@ -86,7 +86,7 @@ layer:
 
     - component: NXP::Device:SDK Utilities:assert
     - component: NXP::Device:SDK Utilities:debug_console
-      # defines:
+      # define:
       #   - SDK_DEBUGCONSOLE=1
       #   - __MCUXPRESSO
     - component: NXP::Device:SDK Utilities:serial_manager
@@ -99,13 +99,13 @@ layer:
 
     - component: Keil::CMSIS Driver:Ethernet MAC
     - component: Keil::CMSIS Driver:Ethernet PHY:KSZ8081RNA
-      # defines:
+      # define:
       #   - ETH_PHY_REF_CLK_50M=1
     - component: Keil::CMSIS Driver:MCI
     - component: ARM::CMSIS Driver:USART:Custom
     - component: NXP::CMSIS Driver:USART:lpuart_cmsis
     - component: Keil::CMSIS Driver:VIO:Board&IMXRT1050-EVKB
-      # defines:
+      # define:
       #   - VIO_SENSOR_DISABLE
 
     - component: Keil::Compiler&ARM Compiler:Event Recorder&DAP

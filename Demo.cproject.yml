@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/Open-CMSIS-Pack/devtools/schemas/projmgr/0.9.4/tools/projmgr/schemas/cproject.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Open-CMSIS-Pack/devtools/schemas/projmgr/1.5.0/tools/projmgr/schemas/cproject.schema.json
 
 project:
   # packs:
@@ -23,7 +23,7 @@ project:
   #     - STDERR:
   #     - Heap : 65536
 
-  add-paths:
+  add-path:
     - ./config_files
     - ./amazon-freertos/demos/include
     - ./amazon-freertos/demos/network_manager
@@ -50,7 +50,7 @@ project:
     - component: ARM::RTOS&FreeRTOS:Timers
 
     - component: ARM::Security:mbed TLS
-      defines:
+      define:
         - MBEDTLS_CONFIG_FILE="aws_mbedtls_config.h"
 
     - component: AWS::FreeRTOS:backoffAlgorithm
@@ -61,12 +61,12 @@ project:
     - component: AWS::FreeRTOS:corePKCS11:Portable Abstraction Layer&Custom
     - component: AWS::FreeRTOS:corePKCS11:Utilities
     - component: AWS::Security:PKCS11:corePKCS11
-      defines:
+      define:
         - MBEDTLS_CONFIG_FILE="aws_mbedtls_config.h"
 
   groups:
     - group: Documentation
-      files: 
+      files:
         - file: ./README.md
     - group: main
       files:
@@ -99,7 +99,7 @@ project:
         - file: ./amazon-freertos/demos/network_manager/aws_iot_network_manager.c
         - file: ./amazon-freertos/demos/common/pkcs11_helpers/pkcs11_helpers.c
     - group: libraries
-      defines:
+      define:
         - MBEDTLS_CONFIG_FILE="aws_mbedtls_config.h"
       files:
         - file: ./amazon-freertos/libraries/c_sdk/standard/common/iot_device_metrics.c
@@ -127,23 +127,23 @@ project:
   layers:
     # Socket
     - layer: ./Socket/FreeRTOS+TCP/Socket.clayer.yml
-      for-type:
+      for-context:
         - +IP-Stack
     - layer: ./Socket/WiFi/Socket.clayer.yml
-      for-type:
+      for-context:
         - +WiFi
     - layer: ./Socket/VSocket/Socket.clayer.yml
-      for-type:
+      for-context:
         - +AVH
 
     # Board
     - layer: ./Board/IMXRT1050-EVKB/Board.clayer.yml
-      for-type: 
+      for-context:
         - +IP-Stack
         # - +WiFi
     - layer: ./Board/B-U585I-IOT02A/Board.clayer.yml
-      for-type: 
+      for-context:
         - +WiFi
     - layer: ./Board/AVH_MPS3_Corstone-300/Board.clayer.yml
-      for-type: 
+      for-context:
         - +AVH
