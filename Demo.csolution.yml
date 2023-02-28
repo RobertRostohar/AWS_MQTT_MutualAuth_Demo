@@ -2,6 +2,14 @@
 
 solution:
 
+  build-types:
+    - type: Debug
+      debug: on
+      optimize: none
+    - type: Release
+      debug: off
+      optimize: balanced
+
   target-types:
     - type: IP-Stack
       device: NXP::MIMXRT1052DVL6B
@@ -10,35 +18,6 @@ solution:
       device: STMicroelectronics::STM32U585AIIx
     - type: AVH
       device: ARM::SSE-300-MPS3
-
-  build-types:
-    - type: Debug
-      compiler: AC6
-      misc:
-        - C:
-          - -O1
-          - -g
-          - -Wno-macro-redefined
-          - -Wno-pragma-pack
-          - -Wno-parentheses-equality
-          - -std=c99
-        - ASM:
-          - -masm=auto
-        - Link:
-          - --entry=Reset_Handler
-    - type: Release
-      compiler: AC6
-      misc:
-        - C:
-          - -O3
-          - -Wno-macro-redefined
-          - -Wno-pragma-pack
-          - -Wno-parentheses-equality
-          - -std=c99
-        - ASM:
-          - -masm=auto
-        - Link:
-          - --entry=Reset_Handler
 
   projects:
     - project: ./Demo.cproject.yml
