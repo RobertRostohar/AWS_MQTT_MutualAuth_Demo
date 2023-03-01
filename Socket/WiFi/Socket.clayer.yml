@@ -9,6 +9,7 @@ layer:
     - connect: WiFi Socket
       consumes:
         - CMSIS_WiFi: 0
+        - STDOUT
       provides:
         - IoT_Socket
 
