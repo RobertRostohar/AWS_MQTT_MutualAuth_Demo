@@ -119,31 +119,8 @@ project:
       files:
         - file: ./amazon-freertos/ports/pkcs11/core_pkcs11_pal.c
 
-  # requires-layers:
-  #   - Socket
-  #   - Security
-  #   - Board
-
   layers:
-    # Socket
-    - layer: ./Socket/FreeRTOS+TCP/Socket.clayer.yml
-      for-context:
-        - +IP-Stack
-    - layer: ./Socket/WiFi/Socket.clayer.yml
-      for-context:
-        - +WiFi
-    - layer: ./Socket/VSocket/Socket.clayer.yml
-      for-context:
-        - +AVH
-
-    # Board
-    - layer: ./Board/IMXRT1050-EVKB/Board.clayer.yml
-      for-context:
-        - +IP-Stack
-        # - +WiFi
-    - layer: ./Board/B-U585I-IOT02A/Board.clayer.yml
-      for-context:
-        - +WiFi
-    - layer: ./Board/AVH_MPS3_Corstone-300/Board.clayer.yml
-      for-context:
-        - +AVH
+    - layer: $Socket-Layer$
+      type: Socket
+    - layer: $Board-Layer$
+      type: Board

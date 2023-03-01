@@ -13,11 +13,20 @@ solution:
   target-types:
     - type: IP-Stack
       device: NXP::MIMXRT1052DVL6B
+      variables:
+        - Socket-Layer: ./framework/layer/Socket/FreeRTOS+TCP/ETH/Socket.clayer.yml
+        - Board-Layer:  ./framework/layer/Board/IMXRT1050-EVKB/IoT/Board.clayer.yml
     - type: WiFi
       board: STMicroelectronics::B-U585I-IOT02A
       device: STMicroelectronics::STM32U585AIIx
+      variables:
+        - Socket-Layer: ./framework/layer/Socket/WiFi/Socket.clayer.yml
+        - Board-Layer:  ./framework/layer/Board/B-U585I-IOT02A/IoT/Board.clayer.yml
     - type: AVH
       device: ARM::SSE-300-MPS3
+      variables:
+        - Socket-Layer: ./framework/layer/Socket/VSocket/Socket.clayer.yml
+        - Board-Layer:  ./framework/layer/Board/AVH_MPS3_Corstone-300/IoT/Board.clayer.yml
 
   projects:
     - project: ./Demo.cproject.yml
