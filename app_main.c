@@ -53,7 +53,7 @@ const HeapRegion_t xHeapRegions[] = {
 /*---------------------------------------------------------------------------
  * Application main thread
  *---------------------------------------------------------------------------*/
-static void app_main (void *argument) {
+void app_main (void *argument) {
   int32_t status;
 
   (void)argument;
@@ -72,7 +72,7 @@ static void app_main (void *argument) {
 /*---------------------------------------------------------------------------
  * Application initialization
  *---------------------------------------------------------------------------*/
-void app_initialize (void) {
+int32_t app_initialize (void) {
 
 #if (configAPPLICATION_ALLOCATED_HEAP == 1U)
   vPortDefineHeapRegions (xHeapRegions);
@@ -84,4 +84,5 @@ void app_initialize (void) {
                           LOGGING_MESSAGE_QUEUE_LENGTH);
 
   osThreadNew(app_main, NULL, &app_main_attr);
+  return 0;
 }
