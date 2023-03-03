@@ -16,6 +16,8 @@ project:
         - FreeRTOS
         - CMSIS-RTOS2
       consumes:
+        - FreeRTOS
+        - CMSIS-RTOS2
         - IoT_Socket
         - CMSIS_VIO
         - STDIN
