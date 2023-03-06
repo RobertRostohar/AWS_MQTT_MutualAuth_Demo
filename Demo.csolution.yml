@@ -11,10 +11,22 @@ solution:
       optimize: balanced
 
   target-types:
-    - type: IP-Stack
+    - type: IMXRT1050-EVKB
       device: NXP::MIMXRT1052DVL6B
       variables:
         - Socket-Layer: ./framework/layer/Socket/FreeRTOS+TCP/ETH/Socket.clayer.yml
+        - Board-Layer:  ./framework/layer/Board/IMXRT1050-EVKB/IoT/Board.clayer.yml
+    - type: IMXRT1050-EVKB_ESP8266
+      device: NXP::MIMXRT1052DVL6B
+      variables:
+        - Socket-Layer: ./framework/layer/Socket/WiFi/Socket.clayer.yml
+        - Shield-Layer: ./framework/layer/Shield/WiFi/Sparkfun_ESP8266/Shield.clayer.yml
+        - Board-Layer:  ./framework/layer/Board/IMXRT1050-EVKB/IoT/Board.clayer.yml
+    - type: IMXRT1050-EVKB_WizFi360
+      device: NXP::MIMXRT1052DVL6B
+      variables:
+        - Socket-Layer: ./framework/layer/Socket/WiFi/Socket.clayer.yml
+        - Shield-Layer: ./framework/layer/Shield/WiFi/WizNet_WizFi360-EVB/Shield.clayer.yml
         - Board-Layer:  ./framework/layer/Board/IMXRT1050-EVKB/IoT/Board.clayer.yml
     - type: WiFi
       board: STMicroelectronics::B-U585I-IOT02A

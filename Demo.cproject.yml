@@ -124,5 +124,7 @@ project:
   layers:
     - layer: $Socket-Layer$
       type: Socket
+    - layer: $Shield-Layer$
+      type: Shield
     - layer: $Board-Layer$
       type: Board
