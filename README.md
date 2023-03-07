@@ -40,7 +40,7 @@ Build
    - CMSIS packs used in Demo  
      Packs can be installed by executing the following `csolution` and `cpackget` commands:
      ```
-     csolution list packs -s Demo.csolution.yml {-c context} -m >packs.txt
+     csolution list packs -s Demo.csolution.yml {-c Demo.<build-type>+<target-type>} -m >packs.txt
      cpackget add -f packs.txt
      ```
      >Note: all packs used in the Demo solution are installed when context is not specified.
@@ -48,7 +48,7 @@ Build
 2. Create `.cprj` project using `csolution`:  
    `csolution convert -s Demo.csolution.yml -c Demo.<build-type>+<target-type>`  
      - `<build-type>:  Debug | Release`
-     - `<target-type>: IP-Stack | WiFi | AVH`
+     - `<target-type>: AVH | IMXRT1050-EVKB | B-U585I-IOT02A | ...`
 3. Build `.cprj` project using `cbuild`:  
    `cbuild Demo.<build-type>+<target-type>.cprj`
 
