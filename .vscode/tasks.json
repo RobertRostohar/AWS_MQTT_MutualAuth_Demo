@@ -7,7 +7,7 @@
 			"command": "VHT_Corstone_SSE-300_Ethos-U55.exe",
 			"args": [
 				"-f",
-				"Board\\AVH_MPS3_Corstone-300\\fvp_config.txt",
+				"framework\\layer\\Board\\AVH_MPS3_Corstone-300\\IoT\\fvp_config.txt",
 				"${command:cmsis-csolution.getBinaryFile}",
 				"-Q",
 				"10"
