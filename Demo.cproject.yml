@@ -2,7 +2,7 @@
 
 project:
   packs:
-    - pack: ARM::CMSIS-FreeRTOS@10.4.6
+    - pack: ARM::CMSIS-FreeRTOS@10.5.1
     - pack: ARM::mbedTLS@1.7.0
     - pack: AWS::backoffAlgorithm@4.0.0
     - pack: AWS::coreMQTT@4.0.0
