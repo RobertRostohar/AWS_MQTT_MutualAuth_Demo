@@ -12,6 +12,7 @@ successfully run the demo application.
 Targets:
 --------
   - NXP [IMXRT1050-EVKB](./Board/IMXRT1050-EVKB/README.md) Board (`target-type: IMXRT1050-EVKB`, using FreeRTOS+TCP over Ethernet)
+  - NXP IMXRT1050-EVKB Board with Sparkfun DA16200 WiFi Shield (`target-type: IMXRT1050-EVKB_DA16200`, using WiFi)
   - NXP IMXRT1050-EVKB Board with Sparkfun ESP8266 WiFi Shield (`target-type: IMXRT1050-EVKB_ESP8266`, using WiFi)
   - NXP IMXRT1050-EVKB Board with Wiznet WizFi360-EVB WiFi Shield (`target-type: IMXRT1050-EVKB_WizFi360`, using WiFi)
   - STMicroelectronics [B-U585I-IOT02A](./Board/B-U585I-IOT02A/README.md) Board (`target-type: B-U585I-IOT02A`, using on-board WiFi module)
