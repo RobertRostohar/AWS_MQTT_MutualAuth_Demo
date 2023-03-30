@@ -6,6 +6,8 @@ solution:
     - type: Debug
       debug: on
       optimize: none
+      define:
+        - DEBUG
     - type: Release
       debug: off
       optimize: balanced
